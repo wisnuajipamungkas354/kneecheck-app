@@ -1,0 +1,24 @@
+{
+  "name": "kneecheck-app",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "npm run start",
+    "start-dev": "nodemon run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wisnuajipamungkas354/kneecheck-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wisnuajipamungkas354/kneecheck-app/issues"
+  },
+  "homepage": "https://github.com/wisnuajipamungkas354/kneecheck-app#readme",
+  "description": "",
+  "dependencies": {
+    "@hapi/hapi": "^21.3.12",
+    "nodemon": "^3.1.7"
+  }
+}
