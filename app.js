@@ -6,7 +6,7 @@ const init = async () => {
 
     const server = Hapi.server({
         port: 80,
-        host: 'https://knee-check-app.uw.r.appspot.com'
+        host: 'localhost'
     });
 
     server.route({
