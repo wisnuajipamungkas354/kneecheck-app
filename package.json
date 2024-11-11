@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "npm run start",
+    "start": "NODE_ENV=production node ./app.js",
     "start-dev": "nodemon run start"
   },
   "repository": {
