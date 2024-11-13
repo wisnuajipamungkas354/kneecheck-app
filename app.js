@@ -1,12 +1,11 @@
 'use strict';
 
 import express from 'express';
+import router from './routes/routes.js';
 
 const app = express();
 
-app.get('/', (req, res) => {
-  res.send('halo ini app KneeCheck');
-})
+app.use(router);
 
 const PORT = process.env.PORT || 8000
 app.listen(PORT, () => {
