@@ -1,7 +1,5 @@
 import mysql from 'mysql';
 
-
-
 class Model {
   connection = mysql.createConnection({
     host: '34.127.21.55',
@@ -14,6 +12,12 @@ class Model {
   constructor(tableName) {
     this.tableName = tableName;
   }
+
+  /**
+   * Query Get & Filter Data
+   * 
+   * 
+   */
   select(col = '*') {
     this.query = 'SELECT ' + col + ' FROM ' + this.tableName;
     return this;
@@ -23,14 +27,18 @@ class Model {
     return this;
   }
   get() {
-    this.connection.query(this.query, (err, rows) => {
-      if(err){
-        return 'Gagal';
-      }else{
-        return rows;
-      }
-    })
+    return this.query;
   }
+  first() {
+    this.query = this.query + ' LIMIT 1';
+    return this.query;
+  }
+
+  create(values) {
+    this.query = `INSERT INTO ${this.tableName} VALUES (${values})`;
+    return this.query;
+  }
+
 }
 
 export default Model;
