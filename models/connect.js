@@ -80,6 +80,20 @@ class Model {
   }
 
   /**
+   * Update Database
+   * @param {*} obj 
+   * @return UPDATE tableName SET key = value WHERE CLAUSE
+   */
+  update(obj) {
+    const cols = Object.keys(obj);
+    const values = Object.values(obj);
+    const updateData = cols.map((col, i) => `${col} = ${typeof values[i] === 'number' ? values[i] : `"${values[i]}"`}`).join(', ');
+    this.#query = `UPDATE ${this.tableName} SET ${updateData} ${this.#where}`;
+
+    return this.#query;
+  }
+
+  /**
    * Delete Database
    * @return DELETE FROM tableName WHERE CLAUSE
    * @method where() Must call method where() first;
