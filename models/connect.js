@@ -30,7 +30,7 @@ class Model {
    * @return Object Model
    */
   where(col, opr = '=', value) {
-    this.#where = `WHERE ${col} ${opr} ${value}`;
+    this.#where = `WHERE ${col} ${opr} ${typeof value === 'number' ? value : '"' + value + '"'}`;
     return this;
   }
 
@@ -110,5 +110,9 @@ class Model {
     });
   }
 }
+
+const coba = new Model('pasien');
+const hasil = coba.select().where('pasien', '=', 1).get();
+console.log(hasil);
 
 export default Model;
