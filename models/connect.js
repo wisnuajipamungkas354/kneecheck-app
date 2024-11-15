@@ -1,4 +1,5 @@
-import mysql from "mysql";
+import mysql from "mysql2";
+
 
 class Model {
   // private variable
@@ -50,27 +51,28 @@ class Model {
   /**
    * Query Get Data
    */
-  get() {
+   get() {
     if (this.#select === undefined) {
       this.#select = `SELECT * FROM ${this.tableName}`;
     }
 
     this.#query = `${this.#select} ${this.#where} ${this.#orderBy}`;
-    return this.#query;
+    return this.connect(this.#query);
   }
+
   first() {
     if (this.#select === undefined) {
       this.#select = `SELECT * FROM ${this.tableName}`;
     }
 
     this.#query = this.#select + " LIMIT 1";
-    return this.#query;
+    return this.connect(this.#query);
   }
   count(col = "*") {
     this.#query = `SELECT COUNT (${col}) FROM ${this.tableName} ${
       this.#where
     } ${this.#orderBy}`;
-    return this.#query;
+    return this.connect(this.#query);
   }
 
   /**
@@ -83,7 +85,7 @@ class Model {
       .map((value) => (typeof value === "number" ? value : `"${value}"`))
       .join(", ");
     this.#query = `INSERT INTO ${this.tableName} VALUES (${values})`;
-    return this.#query;
+    return this.connect(this.#query);
   }
 
   /**
@@ -102,9 +104,9 @@ class Model {
           }`
       )
       .join(", ");
-    this.#query = `UPDATE ${this.tableName} SET ${updateData} ${this.#where}`;
 
-    return this.#query;
+    this.#query = `UPDATE ${this.tableName} SET ${updateData} ${this.#where}`;
+    return this.connect(this.#query);
   }
 
   /**
@@ -114,14 +116,11 @@ class Model {
    */
   destroy() {
     try {
-      if (this.#query === undefined) {
-        throw new Error("Error: WHERE CLAUSE UNDEFINED");
-      }
       if (this.#where === undefined) {
         throw new Error("Error: WHERE CLAUSE UNDEFINED");
       } else {
         this.#query = `DELETE FROM ${this.tableName} ${this.#where}`;
-        return this.#query;
+        return this.connect(this.#query);
       }
     } catch (err) {
       console.log(err);
@@ -132,13 +131,25 @@ class Model {
    * Connection to Database
    * @return mysql.createConnection
    */
-  connect() {
-    return mysql.createConnection({
+  async connect(sql) {
+    const connection = mysql.createConnection({
       host: "34.127.21.55",
       user: "root",
-      database: "knee_db",
+      database: "knee_d",
       password: "knee123",
-    });
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+    })
+
+    try {
+     const [rows, fields] = await connection.promise().query(sql);
+     return rows;
+    } catch(err) {
+      return err;
+    } finally {
+      connection.end();
+    }
   }
 }
 
