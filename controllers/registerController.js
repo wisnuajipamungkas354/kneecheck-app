@@ -31,13 +31,40 @@ const registerPasien = (req, res) => {
           userModel
             .connect()
             .query(
-              userModel.create(),
-              [id_user, email, hashPassword, userType],
+              userModel.create(id_user, email, hashPassword, userType),
               (err, rows) => {
                 if (err) {
                   res.status(500).send({ message: err.sqlMessage });
                 } else {
-                  res.send({ message: "berhasil" });
+                  pasienModel
+                    .connect()
+                    .query(
+                      pasienModel.create(
+                        id_pasien,
+                        id_user,
+                        name,
+                        gender,
+                        birth,
+                        address
+                      ),
+                      (err, rows) => {
+                        if (err) {
+                          res.status(500).send({
+                            message: err.sqlMessage,
+                            pesan: userModel.create(
+                              id_pasien,
+                              id_user,
+                              name,
+                              gender,
+                              birth,
+                              address
+                            ),
+                          });
+                        } else {
+                          res.send({ message: "Success Register" });
+                        }
+                      }
+                    );
                 }
               }
             );
@@ -94,17 +121,16 @@ const registerPasien = (req, res) => {
 
 const getAllPasien = (req, res) => {
   pasienModel.select();
-  const pasien = pasienModel.connection.query(
-    pasienModel.query,
-    (err, rows, fields) => {
+  const pasien = pasienModel
+    .connect()
+    .query(pasienModel.select().get(), (err, rows, fields) => {
       if (err) {
         res.status(500).send({ message: err.sqlMessage });
       } else {
         const data = rows;
         res.json(data);
       }
-    }
-  );
+    });
   // pasienModel.get();
 };
 const getAllUser = (req, res) => {
