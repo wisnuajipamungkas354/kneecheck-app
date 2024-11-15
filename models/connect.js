@@ -86,10 +86,10 @@ class Model {
    */
   destroy() {
     try {
-      if(this.#query === undefined) {
+      if(this.#where === undefined) {
         throw new Error('Error: WHERE CLAUSE UNDEFINED');
       } else {
-        this.#query = `DELETE FROM ${this.tableName} ${this.#query}`;
+        this.#query = `DELETE FROM ${this.tableName} ${this.#where}`;
         return this.#query;
       }
     } catch(err) {
@@ -110,9 +110,5 @@ class Model {
     });
   }
 }
-
-const coba = new Model('pasien');
-const hasil = coba.select().where('pasien', '=', 1).get();
-console.log(hasil);
 
 export default Model;
