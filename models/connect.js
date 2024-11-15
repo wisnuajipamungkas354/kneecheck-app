@@ -53,7 +53,7 @@ class Model {
       this.#select = `SELECT * FROM ${this.tableName}`;
     }
     
-    this.#query = this.#select + this.#where + this.#orderBy;
+    this.#query = `${this.#select} ${this.#where} ${this.#orderBy}`;
     return this.#query;
   }
   first() {
