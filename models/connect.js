@@ -78,12 +78,32 @@ class Model {
    * @return INSERT INTO tableName VALUES (values)
    * @param Any String, Number, NULL
    */
-  // create(...values) {
-  //   this.#query = `INSERT INTO ${this.tableName} VALUES (${values})`;
-  //   return this.#query;
-  // }
-  create() {
-    this.#query = `INSERT INTO ${this.tableName} VALUES (?, ?, ?, ?)`;
+  create(...values) {
+    values = values
+      .map((value) => (typeof value === "number" ? value : `"${value}"`))
+      .join(", ");
+    this.#query = `INSERT INTO ${this.tableName} VALUES (${values})`;
+    return this.#query;
+  }
+
+  /**
+   * Update Database
+   * @param {*} obj
+   * @return UPDATE tableName SET key = value WHERE CLAUSE
+   */
+  update(obj) {
+    const cols = Object.keys(obj);
+    const values = Object.values(obj);
+    const updateData = cols
+      .map(
+        (col, i) =>
+          `${col} = ${
+            typeof values[i] === "number" ? values[i] : `"${values[i]}"`
+          }`
+      )
+      .join(", ");
+    this.#query = `UPDATE ${this.tableName} SET ${updateData} ${this.#where}`;
+
     return this.#query;
   }
 
@@ -96,8 +116,11 @@ class Model {
     try {
       if (this.#query === undefined) {
         throw new Error("Error: WHERE CLAUSE UNDEFINED");
+      }
+      if (this.#where === undefined) {
+        throw new Error("Error: WHERE CLAUSE UNDEFINED");
       } else {
-        this.#query = `DELETE FROM ${this.tableName} ${this.#query}`;
+        this.#query = `DELETE FROM ${this.tableName} ${this.#where}`;
         return this.#query;
       }
     } catch (err) {
@@ -119,8 +142,10 @@ class Model {
   }
 }
 
-const coba = new Model("pasien");
-const hasil = coba.select().where("pasien", "=", 1).get();
-console.log(hasil);
+// const coba = new Model("pasien");
+// const hasil = coba.select().where("pasien", "=", 1).get();
+// const coba = new Model('pasien');
+// const hasil = coba.create('cobain', 'entah', 1,1);
+// console.log(hasil);
 
 export default Model;
