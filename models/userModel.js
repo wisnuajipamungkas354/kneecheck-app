@@ -1,5 +1,17 @@
+import { nanoid } from "nanoid";
 import Model from "./connect.js";
 
-const userModel = new Model('user');
+class User extends Model {
+  constructor() {
+    super('user');
+  }
+
+  generateId() {
+    const idUser = nanoid(12);
+    return idUser;
+  }
+}
+
+const userModel = new User();
 
 export default userModel;

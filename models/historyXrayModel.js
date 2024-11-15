@@ -1,22 +1,22 @@
 import { customAlphabet, nanoid } from "nanoid";
 import Model from "./connect.js";
 
-class Pasien extends Model {
+class HistoryXray extends Model {
 
   constructor() {
-    super('pasien');
+    super('history-xray');
   }
 
   generateId() {
     const date = new Date();
     const year = date.getFullYear().toString().slice(-2);
     const month = date.getMonth() + 1; // getMonth() mengembalikan number 0-11 bukan 1-12
-    const suffix = customAlphabet('1234567890', 4);
+    const suffix = customAlphabet('1234567890axray', 6);
 
-    return 'P' + year + month.toString() + suffix().toString();
+    return 'XRAY-' + year + month.toString() + suffix().toString();
   }
 }
 
-const pasienModel = new Pasien();
+const historyXrayModel = new HistoryXray();
 
-export default pasienModel;
+export default historyXrayModel;
