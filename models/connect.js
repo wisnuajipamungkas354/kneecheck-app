@@ -75,6 +75,7 @@ class Model {
    * @param Any String, Number, NULL
    */
   create(...values) {
+    values = values.map((value) => typeof value === 'number' ? value : `"${value}"`).join(', ');
     this.#query = `INSERT INTO ${this.tableName} VALUES (${values})`;
     return this.#query;
   }
@@ -124,5 +125,9 @@ class Model {
     });
   }
 }
+
+const coba = new Model('pasien');
+const hasil = coba.create('cobain', 'entah', 1,1);
+console.log(hasil);
 
 export default Model;
