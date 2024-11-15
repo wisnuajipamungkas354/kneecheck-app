@@ -142,10 +142,4 @@ class Model {
   }
 }
 
-// const coba = new Model("pasien");
-// const hasil = coba.select().where("pasien", "=", 1).get();
-// const coba = new Model('pasien');
-// const hasil = coba.create('cobain', 'entah', 1,1);
-// console.log(hasil);
-
 export default Model;
