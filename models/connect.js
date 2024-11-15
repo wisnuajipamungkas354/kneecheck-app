@@ -1,11 +1,11 @@
-import mysql from 'mysql';
+import mysql from "mysql";
 
 class Model {
   // private variable
   #query;
   #select;
-  #where = '';
-  #orderBy ='';
+  #where = "";
+  #orderBy = "";
 
   constructor(tableName) {
     this.tableName = tableName;
@@ -17,7 +17,7 @@ class Model {
    * @param string Must be string, separate comma (,) if the column least of one
    * @return Object Model
    */
-  select(col = '*') {
+  select(col = "*") {
     this.#select = `SELECT ${col} FROM ${this.tableName}`;
     return this;
   }
@@ -29,8 +29,10 @@ class Model {
    * @param {*} value the column's value
    * @return Object Model
    */
-  where(col, opr = '=', value) {
-    this.#where = `WHERE ${col} ${opr} ${typeof value === 'number' ? value : '"' + value + '"'}`;
+  where(col, opr = "=", value) {
+    this.#where = `WHERE ${col} ${opr} ${
+      typeof value === "number" ? value : '"' + value + '"'
+    }`;
     return this;
   }
 
@@ -40,7 +42,7 @@ class Model {
    * @param {*} urutan Ascending / Descending
    * @return Object Model
    */
-  orderBy(col = '', urutan = 'ASC') {
+  orderBy(col = "", urutan = "ASC") {
     this.#orderBy = `ORDER BY ${col} ${urutan}`;
     return this;
   }
@@ -49,23 +51,25 @@ class Model {
    * Query Get Data
    */
   get() {
-    if(this.#select === undefined) {
+    if (this.#select === undefined) {
       this.#select = `SELECT * FROM ${this.tableName}`;
     }
-    
+
     this.#query = `${this.#select} ${this.#where} ${this.#orderBy}`;
     return this.#query;
   }
   first() {
-    if(this.#select === undefined) {
+    if (this.#select === undefined) {
       this.#select = `SELECT * FROM ${this.tableName}`;
-    } 
+    }
 
-    this.#query = this.#select + ' LIMIT 1';
+    this.#query = this.#select + " LIMIT 1";
     return this.#query;
   }
-  count(col = '*') {
-    this.#query = `SELECT COUNT (${col}) FROM ${this.tableName} ${this.#where} ${this.#orderBy}`;
+  count(col = "*") {
+    this.#query = `SELECT COUNT (${col}) FROM ${this.tableName} ${
+      this.#where
+    } ${this.#orderBy}`;
     return this.#query;
   }
 
@@ -74,8 +78,12 @@ class Model {
    * @return INSERT INTO tableName VALUES (values)
    * @param Any String, Number, NULL
    */
-  create(...values) {
-    this.#query = `INSERT INTO ${this.tableName} VALUES (${values})`;
+  // create(...values) {
+  //   this.#query = `INSERT INTO ${this.tableName} VALUES (${values})`;
+  //   return this.#query;
+  // }
+  create() {
+    this.#query = `INSERT INTO ${this.tableName} VALUES (?, ?, ?, ?)`;
     return this.#query;
   }
 
@@ -86,13 +94,13 @@ class Model {
    */
   destroy() {
     try {
-      if(this.#query === undefined) {
-        throw new Error('Error: WHERE CLAUSE UNDEFINED');
+      if (this.#query === undefined) {
+        throw new Error("Error: WHERE CLAUSE UNDEFINED");
       } else {
         this.#query = `DELETE FROM ${this.tableName} ${this.#query}`;
         return this.#query;
       }
-    } catch(err) {
+    } catch (err) {
       console.log(err);
     }
   }
@@ -103,16 +111,16 @@ class Model {
    */
   connect() {
     return mysql.createConnection({
-      host: '34.127.21.55',
-      user: 'root',
-      database: 'knee_db',
-      password: 'knee123'
+      host: "34.127.21.55",
+      user: "root",
+      database: "knee_db",
+      password: "knee123",
     });
   }
 }
 
-const coba = new Model('pasien');
-const hasil = coba.select().where('pasien', '=', 1).get();
+const coba = new Model("pasien");
+const hasil = coba.select().where("pasien", "=", 1).get();
 console.log(hasil);
 
 export default Model;

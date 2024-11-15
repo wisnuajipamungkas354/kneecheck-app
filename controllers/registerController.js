@@ -5,39 +5,60 @@ import validator from "validator";
 import mysql from "mysql";
 import bcrypt from "bcryptjs";
 
-const connection = mysql.createConnection({
-  host: "34.127.21.55",
-  user: "root",
-  database: "knee_db",
-  password: "knee123",
-});
-
 const registerPasien = (req, res) => {
-  const id_user = "2410060003";
-  const id_pasien = "P2410060003";
+  const id_user = userModel.generateId();
+  const id_pasien = pasienModel.generateId();
   const userType = "Pasien";
 
   const { email, password, name, gender, birth, address } = req.body;
 
   if (validator.isEmail(email) === true) {
+    userModel
+      .connect()
+      .query(
+        userModel.select().where("email", "=", email).get(),
+        async (err, rows, fields) => {
+          if (err) {
+            res.status(500).send({ message: err.sqlMessage });
+          }
+          if (rows.length > 0) {
+            res
+              .status(400)
+              .send({ message: "that email has already been used" });
+            return false;
+          }
+          const hashPassword = await bcrypt.hash(password, 8);
+          userModel
+            .connect()
+            .query(
+              userModel.create(),
+              [id_user, email, hashPassword, userType],
+              (err, rows) => {
+                if (err) {
+                  res.status(500).send({ message: err.sqlMessage });
+                } else {
+                  res.send({ message: "berhasil" });
+                }
+              }
+            );
+          // res.send({ id_user, id_pasien, email, password: hashPassword });
+        }
+      );
     // userModel.where('email', '=', email.toString());
-    const checkEmail = "SELECT * FROM user WHERE email = ?;";
-    connection.query(checkEmail, [email], async (err, rows, field) => {
-      if (err) {
-        res.status(500).send({ message: err.sqlMessage });
-      }
-
-      if (rows.length > 0) {
-        res.send({ message: "That Email Has Already" });
-        return false;
-      }
-
-      let hashPassword = await bcrypt.hash(password, 8);
-      console.log(hashPassword);
-
-      connection.query("INSERT INTO user SET ? ", { id: id_user });
-      res.send({ email, password: hashPassword });
-    });
+    // const checkEmail = "SELECT * FROM user WHERE email = ?;";
+    // connection.query(checkEmail, [email], async (err, rows, field) => {
+    //   if (err) {
+    //     res.status(500).send({ message: err.sqlMessage });
+    //   }
+    //   if (rows.length > 0) {
+    //     res.send({ message: "That Email Has Already" });
+    //     return false;
+    //   }
+    //   let hashPassword = await bcrypt.hash(password, 8);
+    //   console.log(hashPassword);
+    //   connection.query("INSERT INTO user SET ? ", { id: id_user });
+    //   res.send({ email, password: hashPassword });
+    // });
   } else {
     res.send({ message: "fail" });
   }
@@ -86,6 +107,19 @@ const getAllPasien = (req, res) => {
   );
   // pasienModel.get();
 };
+const getAllUser = (req, res) => {
+  const pasien = userModel
+    .connect()
+    .query(userModel.select().get(), (err, rows, fields) => {
+      if (err) {
+        res.status(500).send({ message: err.sqlMessage });
+      } else {
+        const data = rows;
+        res.json(data);
+      }
+    });
+  // pasienModel.get();
+};
 
 const deletePasien = (req, res) => {
   const id = req.params.id;
@@ -99,4 +133,4 @@ const deletePasien = (req, res) => {
     }
   });
 };
-export { registerPasien, getAllPasien, deletePasien };
+export { registerPasien, getAllPasien, deletePasien, getAllUser };
