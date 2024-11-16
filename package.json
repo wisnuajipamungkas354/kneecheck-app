@@ -19,7 +19,7 @@
   "homepage": "https://github.com/wisnuajipamungkas354/kneecheck-app#readme",
   "description": "",
   "dependencies": {
-    "@google-cloud/debug-agent": "^3.2.0",
+    "@google-cloud/debug-agent": "^9.0.1",
     "@google-cloud/storage": "^2.4.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
@@ -29,6 +29,7 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.1",
     "mysql": "^2.16.0",
+    "mysql2": "^3.11.4",
     "nanoid": "^5.0.8",
     "nodemon": "^3.1.7",
     "validator": "^13.12.0"

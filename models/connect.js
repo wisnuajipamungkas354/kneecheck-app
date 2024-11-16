@@ -135,7 +135,7 @@ class Model {
     const connection = mysql.createConnection({
       host: "34.127.21.55",
       user: "root",
-      database: "knee_d",
+      database: "knee_db",
       password: "knee123",
       waitForConnections: true,
       connectionLimit: 10,

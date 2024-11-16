@@ -2,7 +2,7 @@
 import pasienModel from "../models/pasienModel.js";
 import userModel from "../models/userModel.js";
 import validator from "validator";
-import mysql from "mysql";
+import mysql from "mysql2";
 import bcrypt from "bcryptjs";
 
 const registerPasien = (req, res) => {
