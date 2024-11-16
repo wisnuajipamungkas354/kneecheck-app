@@ -56,22 +56,37 @@ class Model {
     }
 
     this.#query = `${this.#select} ${this.#where} ${this.#orderBy}`;
-    return this.connect(this.#query);
+    return this.#connect(this.#query);
   }
 
   first() {
     if (this.#select === undefined) {
-      this.#select = `SELECT * FROM ${this.tableName}`;
+      this.#select = `SELECT * FROM ${this.tableName} ${this.#where}`;
     }
 
     this.#query = this.#select + " LIMIT 1";
-    return this.connect(this.#query);
+    return this.#connect(this.#query);
   }
+
   count(col = "*") {
     this.#query = `SELECT COUNT (${col}) FROM ${this.tableName} ${
       this.#where
     } ${this.#orderBy}`;
-    return this.connect(this.#query);
+    return this.#connect(this.#query);
+  }
+  /**
+   * Where Data is Exists
+   * @returns SELECT EXISTS (SELECT col FROM tableName WHERE CLAUSE) : 1
+   * @method where() Must call method where() first
+   */
+  exists() {
+    if(this.#select === undefined) {
+      this.#query = `SELECT EXISTS (SELECT * FROM ${this.tableName} ${this.#where})`;
+    } else {
+      this.#query = `SELECT EXISTS (${this.#select} ${this.#where})`;
+    }
+
+    return this.#connect(this.#query);
   }
 
   /**
@@ -84,7 +99,7 @@ class Model {
       .map((value) => (typeof value === "number" ? value : `"${value}"`))
       .join(", ");
     this.#query = `INSERT INTO ${this.tableName} VALUES (${values})`;
-    return this.connect(this.#query);
+    return this.#connect(this.#query);
   }
 
   /**
@@ -105,7 +120,7 @@ class Model {
       .join(", ");
 
     this.#query = `UPDATE ${this.tableName} SET ${updateData} ${this.#where}`;
-    return this.connect(this.#query);
+    return this.#connect(this.#query);
   }
 
   /**
@@ -119,7 +134,7 @@ class Model {
         throw new Error("Error: WHERE CLAUSE UNDEFINED");
       } else {
         this.#query = `DELETE FROM ${this.tableName} ${this.#where}`;
-        return this.connect(this.#query);
+        return this.#connect(this.#query);
       }
     } catch (err) {
       console.log(err);
@@ -130,7 +145,7 @@ class Model {
    * Connection to Database
    * @return mysql.createConnection
    */
-  async connect(sql) {
+  async #connect(sql) {
     const connection = mysql.createConnection({
       host: "34.127.21.55",
       user: "root",

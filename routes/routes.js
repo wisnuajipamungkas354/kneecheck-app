@@ -5,6 +5,7 @@ import {
   deletePasien,
   getAllUser,
 } from "../controllers/registerController.js";
+import { getProfilePasien } from "../controllers/pasienController.js";
 import { login } from "../controllers/loginController.js";
 const router = express.Router();
 
@@ -21,5 +22,9 @@ router.post("/login", login);
 router.get("/about", (req, res) => {
   res.send("This is about pages");
 });
+
+// Pasien Routes
+router.get("/pasien/profile/:id", getProfilePasien);
+router.get("/pasien/profile/:id/update", getProfilePasien);
 
 export default router;
