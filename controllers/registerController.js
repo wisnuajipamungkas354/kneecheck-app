@@ -21,7 +21,7 @@ const registerPasien = async (req, res) => {
       address
     ) === true
   ) {
-    res.send({ message: "Harap isi semuanya" });
+    res.status(400).send({ message: "Please fill out the form correctly" });
     return false;
   }
 
@@ -54,7 +54,7 @@ const registerPasien = async (req, res) => {
       res.send({ message: "Account created successfully! You can now log in" });
     }
   } else {
-    res.send({
+    res.status(400).send({
       message: "Invalid email format. Please enter a valid email address",
     });
   }
