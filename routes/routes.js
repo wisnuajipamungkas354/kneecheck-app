@@ -5,7 +5,7 @@ import {
   deletePasien,
   getAllUser,
 } from "../controllers/registerController.js";
-import { getProfilePasien, updateProfilePasien, updateUserPasien } from "../controllers/pasienController.js";
+import { getHistoryPasien, getProfilePasien, updateProfilePasien, updateUserPasien } from "../controllers/pasienController.js";
 import { login } from "../controllers/loginController.js";
 const router = express.Router();
 
@@ -27,5 +27,6 @@ router.get("/about", (req, res) => {
 router.get("/pasien/profile/:id", getProfilePasien);
 router.post("/pasien/profile/:id/update-profile", updateProfilePasien);
 router.post("/pasien/profile/:id/update-user", updateUserPasien);
+router.get("/pasien/history/:id", getHistoryPasien);
 
 export default router;

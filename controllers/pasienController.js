@@ -1,7 +1,7 @@
-import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import pasienModel from '../models/pasienModel.js';
 import userModel from '../models/userModel.js';
+import historyXrayModel from '../models/historyXrayModel.js';
 
 const getProfilePasien = async (req, res) => {
     const id = req.params.id;
@@ -23,7 +23,7 @@ const getProfilePasien = async (req, res) => {
 
 const updateProfilePasien = async (req, res) => {
     const { name, gender, birth, address } = req.body[0];
-    
+
     if(name && gender && birth && address === undefined || name && gender && birth && address === null) {
       res.status(401).send('Please fill all the form input');
       return;
@@ -75,7 +75,18 @@ const updateUserPasien = async (req, res) => {
 }
 
 const getHistoryPasien = (req, res) => {
-    // 
+  try {
+    const id = userModel.where('id', '=', req.params.id).value('id_user');
+    const result = historyXrayModel.where('id_user', '=', id).get();
+
+    if(result.code !== undefined) {
+      throw new Error('Failed to get History');
+    } else {
+      res.status(200).json(result);
+    }
+  } catch(err) {
+    res.status(500).send(err.message);
+  }
 }
 
 const getDetailHistoryPasien = (req, res) => {
