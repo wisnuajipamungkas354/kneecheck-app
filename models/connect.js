@@ -1,6 +1,5 @@
 import mysql from "mysql2";
 
-
 class Model {
   // private variable
   #query;
@@ -51,7 +50,7 @@ class Model {
   /**
    * Query Get Data
    */
-   get() {
+  get() {
     if (this.#select === undefined) {
       this.#select = `SELECT * FROM ${this.tableName}`;
     }
@@ -135,17 +134,17 @@ class Model {
     const connection = mysql.createConnection({
       host: "34.127.21.55",
       user: "root",
-      database: "knee_d",
+      database: "knee_db",
       password: "knee123",
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0,
-    })
+    });
 
     try {
-     const [rows, fields] = await connection.promise().query(sql);
-     return rows;
-    } catch(err) {
+      const [rows, fields] = await connection.promise().query(sql);
+      return rows;
+    } catch (err) {
       return err;
     } finally {
       connection.end();
