@@ -89,6 +89,20 @@ class Model {
     return result[0].result;
   }
 
+  async value(col) {
+    try {
+      if(typeof col === 'string') {
+        this.#query = `SELECT ${col} AS result FROM ${this.tableName} ${this.#where} LIMIT 1`;
+        const result = await this.#connect(this.#query);
+        return result[0].result;
+      }
+      else {
+        throw new Error('Parameter must be string');
+      }
+    } catch(err) {
+      console.log(err);
+    }
+  }
   /**
    * Create Database
    * @return INSERT INTO tableName VALUES (values)
