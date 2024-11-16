@@ -67,10 +67,25 @@ class Model {
     this.#query = this.#select + " LIMIT 1";
     return this.#connect(this.#query);
   }
+
   count(col = "*") {
     this.#query = `SELECT COUNT (${col}) FROM ${this.tableName} ${
       this.#where
     } ${this.#orderBy}`;
+    return this.#connect(this.#query);
+  }
+  /**
+   * Where Data is Exists
+   * @returns SELECT EXISTS (SELECT col FROM tableName WHERE CLAUSE) : 1
+   * @method where() Must call method where() first
+   */
+  exists() {
+    if(this.#select === undefined) {
+      this.#query = `SELECT EXISTS (SELECT * FROM ${this.tableName} ${this.#where})`;
+    } else {
+      this.#query = `SELECT EXISTS (${this.#select} ${this.#where})`;
+    }
+
     return this.#connect(this.#query);
   }
 
