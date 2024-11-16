@@ -79,14 +79,14 @@ class Model {
    * @returns SELECT EXISTS (SELECT col FROM tableName WHERE CLAUSE) : 1
    * @method where() Must call method where() first
    */
-  exists() {
+  async exists() {
     if(this.#select === undefined) {
-      this.#query = `SELECT EXISTS (SELECT * FROM ${this.tableName} ${this.#where})`;
+      this.#query = `SELECT EXISTS (SELECT * FROM ${this.tableName} ${this.#where}) AS result`;
     } else {
-      this.#query = `SELECT EXISTS (${this.#select} ${this.#where})`;
+      this.#query = `SELECT EXISTS (${this.#select} ${this.#where}) AS result`;
     }
-
-    return this.#connect(this.#query);
+    const result = await this.#connect(this.#query);
+    return result[0].result;
   }
 
   /**
