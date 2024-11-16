@@ -88,7 +88,12 @@ class Model {
     const result = await this.#connect(this.#query);
     return result[0].result;
   }
-
+  
+  /**
+   * Get value string of rows
+   * @param string Parameter Must be String
+   * @returns String Value
+   */
   async value(col) {
     try {
       if(typeof col === 'string') {
