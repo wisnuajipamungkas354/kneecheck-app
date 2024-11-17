@@ -6,7 +6,7 @@ import {
   getAllUser,
   registerDokter,
 } from "../controllers/registerController.js";
-import { getProfilePasien } from "../controllers/pasienController.js";
+import { getHistoryPasien, getProfilePasien, updateProfilePasien, updateUserPasien } from "../controllers/pasienController.js";
 import { login } from "../controllers/loginController.js";
 import CekToken from "../middleware/cekToken.js";
 const router = express.Router();
@@ -27,6 +27,8 @@ router.get("/about", (req, res) => {
 
 // Pasien Routes
 router.get("/pasien/profile/:id", getProfilePasien);
-router.get("/pasien/profile/:id/update", getProfilePasien);
+router.post("/pasien/profile/:id/update-profile", updateProfilePasien);
+router.post("/pasien/profile/:id/update-user", updateUserPasien);
+router.get("/pasien/history/:id", getHistoryPasien);
 
 export default router;
