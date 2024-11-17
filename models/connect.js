@@ -90,7 +90,7 @@ class Model {
     const result = await this.#connect(this.#query);
     return result[0].result;
   }
-  
+
   /**
    * Get value string of rows
    * @param string Parameter Must be String
@@ -98,15 +98,16 @@ class Model {
    */
   async value(col) {
     try {
-      if(typeof col === 'string') {
-        this.#query = `SELECT ${col} AS result FROM ${this.tableName} ${this.#where} LIMIT 1`;
+      if (typeof col === "string") {
+        this.#query = `SELECT ${col} AS result FROM ${this.tableName} ${
+          this.#where
+        } LIMIT 1`;
         const result = await this.#connect(this.#query);
         return result[0].result;
+      } else {
+        throw new Error("Parameter must be string");
       }
-      else {
-        throw new Error('Parameter must be string');
-      }
-    } catch(err) {
+    } catch (err) {
       console.log(err);
     }
   }
