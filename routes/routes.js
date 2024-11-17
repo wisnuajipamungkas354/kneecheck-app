@@ -22,18 +22,10 @@ router.post("/register/pasien", registerPasien);
 router.post("/register/dokter", registerDokter);
 router.post("/login", login);
 
-router.get("/about", (req, res) => {
-  res.send("This is about pages");
-});
-
 // Pasien Routes
 router.get("/pasien/profile/:id", CekToken, getProfilePasien);
-router.post(
-  "/pasien/profile/:id/update-profile",
-  CekToken,
-  updateProfilePasien
-);
-router.post("/pasien/profile/:id/update-user", CekToken, updateUserPasien);
+router.put("/pasien/profile/:id/update-profile", CekToken, updateProfilePasien);
+router.put("/pasien/profile/:id/update-user", CekToken, updateUserPasien);
 router.get("/pasien/history/:id", CekToken, getHistoryPasien);
 
 export default router;

@@ -61,10 +61,10 @@ class Model {
 
   first() {
     if (this.#select === undefined) {
-      this.#select = `SELECT * FROM ${this.tableName} ${this.#where}`;
+      this.#select = `SELECT * FROM ${this.tableName}`;
     }
 
-    this.#query = this.#select + " LIMIT 1";
+    this.#query = `${this.#select} ${this.#where} LIMIT 1`;
     return this.#connect(this.#query);
   }
 
@@ -99,9 +99,7 @@ class Model {
   async value(col) {
     try {
       if (typeof col === "string") {
-        this.#query = `SELECT ${col} AS result FROM ${this.tableName} ${
-          this.#where
-        } LIMIT 1`;
+        this.#query = `SELECT ${col} AS result FROM ${this.tableName} ${this.#where} LIMIT 1`;
         const result = await this.#connect(this.#query);
         return result[0].result;
       } else {
