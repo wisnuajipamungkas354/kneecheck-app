@@ -1,5 +1,6 @@
 // import connection from "../models/connect.js";
 import pasienModel from "../models/pasienModel.js";
+import dokterModel from "../models/dokterModel.js";
 import userModel from "../models/userModel.js";
 import validator from "validator";
 import bcrypt from "bcryptjs";
@@ -29,9 +30,9 @@ const registerPasien = async (req, res) => {
     const checkEmail = await userModel
       .select()
       .where("email", "=", email)
-      .get();
-
-    if (checkEmail.length > 0) {
+      .exists();
+    console.log(checkEmail);
+    if (checkEmail === 1) {
       res.status(400).send({
         message: "This email is already taken. Please choose a different one",
       });
@@ -50,6 +51,62 @@ const registerPasien = async (req, res) => {
         gender,
         birth,
         address
+      );
+      res.send({ message: "Account created successfully! You can now log in" });
+    }
+  } else {
+    res.status(400).send({
+      message: "Invalid email format. Please enter a valid email address",
+    });
+  }
+};
+
+const registerDokter = async (req, res) => {
+  const id_user = userModel.generateId();
+  const id_dokter = dokterModel.generateId();
+  const userType = "Dokter";
+
+  const { email, password, name, gender, address, hospital } = req.body;
+
+  if (
+    userModel.checkEmptyOrUndefined(
+      email,
+      password,
+      name,
+      gender,
+      address,
+      hospital
+    ) === true
+  ) {
+    res.status(400).send({ message: "Please fill out the form correctly" });
+    return false;
+  }
+
+  if (validator.isEmail(email) === true) {
+    const checkEmail = await userModel
+      .select()
+      .where("email", "=", email)
+      .exists();
+
+    if (checkEmail === 1) {
+      res.status(400).send({
+        message: "This email is already taken. Please choose a different one",
+      });
+    } else {
+      const hashPassword = await bcrypt.hash(password, 8);
+      const user = await userModel.create(
+        id_user,
+        email,
+        hashPassword,
+        userType
+      );
+      const dokter = await dokterModel.create(
+        id_dokter,
+        id_user,
+        name,
+        gender,
+        address,
+        hospital
       );
       res.send({ message: "Account created successfully! You can now log in" });
     }
@@ -81,4 +138,10 @@ const deletePasien = (req, res) => {
     }
   });
 };
-export { registerPasien, getAllPasien, deletePasien, getAllUser };
+export {
+  registerPasien,
+  getAllPasien,
+  deletePasien,
+  getAllUser,
+  registerDokter,
+};
