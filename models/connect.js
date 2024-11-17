@@ -80,8 +80,10 @@ class Model {
    * @method where() Must call method where() first
    */
   async exists() {
-    if(this.#select === undefined) {
-      this.#query = `SELECT EXISTS (SELECT * FROM ${this.tableName} ${this.#where}) AS result`;
+    if (this.#select === undefined) {
+      this.#query = `SELECT EXISTS (SELECT * FROM ${this.tableName} ${
+        this.#where
+      }) AS result`;
     } else {
       this.#query = `SELECT EXISTS (${this.#select} ${this.#where}) AS result`;
     }
