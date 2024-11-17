@@ -25,8 +25,8 @@ router.get("/about", (req, res) => {
 
 // Pasien Routes
 router.get("/pasien/profile/:id", getProfilePasien);
-router.post("/pasien/profile/:id/update-profile", updateProfilePasien);
-router.post("/pasien/profile/:id/update-user", updateUserPasien);
+router.put("/pasien/profile/:id/update-profile", updateProfilePasien);
+router.put("/pasien/profile/:id/update-user", updateUserPasien);
 router.get("/pasien/history/:id", getHistoryPasien);
 
 export default router;
