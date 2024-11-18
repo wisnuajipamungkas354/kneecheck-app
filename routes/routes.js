@@ -4,6 +4,7 @@ import {
   registerDokter,
 } from "../controllers/registerController.js";
 import {
+  getDetailHistoryPasien,
   getHistoryPasien,
   getProfilePasien,
   updateProfilePasien,
@@ -32,14 +33,10 @@ router.post("/login", login);
 
 // Pasien Routes
 router.get("/pasien/profile", CekToken, cekTypePasien, getProfilePasien);
-router.post("/pasien/profile/update-profile", CekToken, updateProfilePasien);
-router.post(
-  "/pasien/profile/update-user",
-  CekToken,
-  cekTypePasien,
-  updateUserPasien
-);
-router.get("/pasien/history/:id", CekToken, cekTypePasien, getHistoryPasien);
+router.put("/pasien/profile/update-profile", CekToken, updateProfilePasien);
+router.put("/pasien/profile/update-user", CekToken, cekTypePasien, updateUserPasien);
+router.get("/pasien/history", CekToken, cekTypePasien, getHistoryPasien);
+router.get("/pasien/history/:id", CekToken, cekTypePasien, getDetailHistoryPasien);
 
 // Dokter Routes
 router.get("/dokter", CekToken, cekTypeDokter, cekTypeDokter, getAllDokter);

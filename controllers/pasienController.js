@@ -4,16 +4,13 @@ import userModel from '../models/userModel.js';
 import historyXrayModel from '../models/historyXrayModel.js';
 
 const getProfilePasien = async (req, res) => {
-    const id = req.params.id;
-
-    let profilePasien = await pasienModel.where('id_pasien', '=', id).first();
+    let profilePasien = await pasienModel.where('id_user', '=', req.id_user).first();
     if(profilePasien[0] === undefined) {
       res.status(404).send('Pasien tidak ditemukan');
       return;
     }
 
-    const {id_user} = profilePasien[0];
-    const userProfile = await userModel.where('id', '=', id_user).first();
+    const userProfile = await userModel.where('id', '=', req.id_user).first();
 
     profilePasien[0].email = userProfile[0].email;
     profilePasien[0].user_type = userProfile[0].user_type;
@@ -30,7 +27,7 @@ const updateProfilePasien = async (req, res) => {
     }
     
     try {
-      const result = await pasienModel.where('id_pasien', '=', req.params.id).update({
+      const result = await pasienModel.where('id_user', '=', req.id_user).update({
         name, gender, birth, address
       });
 
@@ -59,8 +56,7 @@ const updateUserPasien = async (req, res) => {
   
   try {
     const hashPassword = await bcrypt.hash(password, 8);
-    const id = await pasienModel.where('id_pasien', '=', req.params.id).value('id_user');
-    const result = await userModel.where('id', '=', id).update({
+    const result = await userModel.where('id', '=', req.id_user).update({
       email, password: hashPassword
     });
 
@@ -76,8 +72,7 @@ const updateUserPasien = async (req, res) => {
 
 const getHistoryPasien = (req, res) => {
   try {
-    const id = userModel.where('id', '=', req.params.id).value('id_user');
-    const result = historyXrayModel.where('id_user', '=', id).get();
+    const result = historyXrayModel.where('id_user', '=', req.id_user).get();
 
     if(result.code !== undefined) {
       throw new Error('Failed to get History');
@@ -89,8 +84,19 @@ const getHistoryPasien = (req, res) => {
   }
 }
 
-const getDetailHistoryPasien = (req, res) => {
-    // 
+const getDetailHistoryPasien = async(req, res) => {
+    const idHistory = req.params.id; 
+
+    try {
+      const result = await historyXrayModel.where('id', '=', idHistory).first();
+      if(result.code !== undefined) {
+        throw new Error('History not found!');
+      } else {
+        res.status(200).json(result);
+      }
+    } catch(err) {
+      res.status(404).send(err.message);
+    }
 }
 
 const saveHistoryPasien = (req, res) => {
