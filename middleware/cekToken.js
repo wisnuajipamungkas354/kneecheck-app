@@ -14,7 +14,9 @@ const CekToken = (req, res, next) => {
         loggedIn: false,
       });
     } else {
+      req.id_user = decoded.id_user;
       req.email = decoded.email;
+      req.userType = decoded.userType;
       next();
     }
   });

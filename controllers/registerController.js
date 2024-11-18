@@ -6,114 +6,124 @@ import validator from "validator";
 import bcrypt from "bcryptjs";
 
 const registerPasien = async (req, res) => {
-  const id_user = userModel.generateId();
-  const id_pasien = pasienModel.generateId();
-  const userType = "Pasien";
-
-  const { email, password, name, gender, birth, address } = req.body;
-
-  if (
-    userModel.checkEmptyOrUndefined(
-      email,
-      password,
-      name,
-      gender,
-      birth,
-      address
-    ) === true
-  ) {
-    res.status(400).send({ message: "Please fill out the form correctly" });
-    return false;
-  }
-
-  if (validator.isEmail(email) === true) {
-    const checkEmail = await userModel
-      .select()
-      .where("email", "=", email)
-      .exists();
-    console.log(checkEmail);
-    if (checkEmail === 1) {
-      res.status(400).send({
-        message: "This email is already taken. Please choose a different one",
-      });
-    } else {
-      const hashPassword = await bcrypt.hash(password, 8);
-      const user = await userModel.create(
-        id_user,
+  try {
+    const id_user = userModel.generateId();
+    const id_pasien = pasienModel.generateId();
+    const userType = "Pasien";
+    const { email, password, name, gender, birth, address } = req.body;
+    if (
+      userModel.checkEmptyOrUndefined(
         email,
-        hashPassword,
-        userType
-      );
-      const pasien = await pasienModel.create(
-        id_pasien,
-        id_user,
+        password,
         name,
         gender,
         birth,
         address
-      );
-      res.send({ message: "Account created successfully! You can now log in" });
+      ) === true
+    ) {
+      res.status(400).send({ message: "Please fill out the form correctly" });
+      return false;
     }
-  } else {
-    res.status(400).send({
-      message: "Invalid email format. Please enter a valid email address",
-    });
+
+    if (validator.isEmail(email) === true) {
+      const checkEmail = await userModel
+        .select()
+        .where("email", "=", email)
+        .exists();
+      console.log(checkEmail);
+      if (checkEmail === 1) {
+        res.status(400).send({
+          message: "This email is already taken. Please choose a different one",
+        });
+      } else {
+        const hashPassword = await bcrypt.hash(password, 8);
+        const user = await userModel.create(
+          id_user,
+          email,
+          hashPassword,
+          userType
+        );
+        const pasien = await pasienModel.create(
+          id_pasien,
+          id_user,
+          name,
+          gender,
+          birth,
+          address
+        );
+        res.send({
+          message: "Account created successfully! You can now log in",
+        });
+      }
+    } else {
+      res.status(400).send({
+        message: "Invalid email format. Please enter a valid email address",
+      });
+    }
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 };
 
 const registerDokter = async (req, res) => {
-  const id_user = userModel.generateId();
-  const id_dokter = dokterModel.generateId();
-  const userType = "Dokter";
+  try {
+    const id_user = userModel.generateId();
+    const id_dokter = dokterModel.generateId();
+    const userType = "Dokter";
 
-  const { email, password, name, gender, address, hospital } = req.body;
+    const { email, password, name, gender, address, hospital } = req.body;
 
-  if (
-    userModel.checkEmptyOrUndefined(
-      email,
-      password,
-      name,
-      gender,
-      address,
-      hospital
-    ) === true
-  ) {
-    res.status(400).send({ message: "Please fill out the form correctly" });
-    return false;
-  }
-
-  if (validator.isEmail(email) === true) {
-    const checkEmail = await userModel
-      .select()
-      .where("email", "=", email)
-      .exists();
-
-    if (checkEmail === 1) {
-      res.status(400).send({
-        message: "This email is already taken. Please choose a different one",
-      });
-    } else {
-      const hashPassword = await bcrypt.hash(password, 8);
-      const user = await userModel.create(
-        id_user,
+    if (
+      userModel.checkEmptyOrUndefined(
         email,
-        hashPassword,
-        userType
-      );
-      const dokter = await dokterModel.create(
-        id_dokter,
-        id_user,
+        password,
         name,
         gender,
         address,
         hospital
-      );
-      res.send({ message: "Account created successfully! You can now log in" });
+      ) === true
+    ) {
+      res.status(400).send({ message: "Please fill out the form correctly" });
+      return false;
     }
-  } else {
-    res.status(400).send({
-      message: "Invalid email format. Please enter a valid email address",
-    });
+
+    if (validator.isEmail(email) === true) {
+      const checkEmail = await userModel
+        .select()
+        .where("email", "=", email)
+        .exists();
+
+      if (checkEmail === 1) {
+        res.status(400).send({
+          message: "This email is already taken. Please choose a different one",
+        });
+      } else {
+        const hashPassword = await bcrypt.hash(password, 8);
+        const user = await userModel.create(
+          id_user,
+          email,
+          hashPassword,
+          userType
+        );
+        const dokter = await dokterModel.create(
+          id_dokter,
+          id_user,
+          name,
+          gender,
+          address,
+          hospital
+        );
+        res.send({
+          message: "Account created successfully! You can now log in",
+        });
+      }
+    } else {
+      res.status(400).send({
+        message: "Invalid email format. Please enter a valid email address",
+      });
+    }
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 };
 
