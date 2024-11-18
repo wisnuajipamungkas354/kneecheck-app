@@ -30,10 +30,6 @@ router.post("/register/pasien", registerPasien);
 router.post("/register/dokter", registerDokter);
 router.post("/login", login);
 
-router.get("/about", (req, res) => {
-  res.send("This is about pages");
-});
-
 // Pasien Routes
 router.get("/pasien/profile", CekToken, cekTypePasien, getProfilePasien);
 router.post("/pasien/profile/update-profile", CekToken, updateProfilePasien);

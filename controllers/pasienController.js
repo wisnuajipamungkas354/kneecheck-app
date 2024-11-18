@@ -8,7 +8,7 @@ const getProfilePasien = async (req, res) => {
 
     let profilePasien = await pasienModel.where('id_pasien', '=', id).first();
     if(profilePasien[0] === undefined) {
-      res.status(500).send('Pasien tidak ditemukan');
+      res.status(404).send('Pasien tidak ditemukan');
       return;
     }
 
