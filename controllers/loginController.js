@@ -3,9 +3,9 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body[0];
   const userCheck = await userModel.select().where("email", "=", email).get();
-
+  
   if (userCheck.length > 0) {
     const user = userCheck[0];
     const checkPassword = await bcrypt.compare(password, user.password);
