@@ -1,1 +1,0 @@
-import historyXrayModel from "../models/historyXrayModel.js";
