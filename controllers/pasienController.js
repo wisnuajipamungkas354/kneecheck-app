@@ -5,24 +5,33 @@ import historyXrayModel from '../models/historyXrayModel.js';
 
 const getProfilePasien = async (req, res) => {
     let profilePasien = await pasienModel.where('id_user', '=', req.id_user).first();
-    if(profilePasien[0] === undefined) {
-      res.status(404).send('Pasien tidak ditemukan');
+
+    if(!profilePasien) {
+      res.status(404).send({
+        status: "fail",
+        message: "Pasien tidak ditemukan"
+      });
       return;
     }
 
-    const userProfile = await userModel.where('id', '=', req.id_user).first();
+    profilePasien.email = req.email;
+    profilePasien.user_type = req.user_type;
 
-    profilePasien[0].email = userProfile[0].email;
-    profilePasien[0].user_type = userProfile[0].user_type;
-
-    res.status(200).json(profilePasien);
+    res.status(200).json({
+      status: "success",
+      message: "Data pasien ditemukan!",
+      data: profilePasien
+    });
 }
 
 const updateProfilePasien = async (req, res) => {
-    const { name, gender, birth, address } = req.body[0];
+    const { name, gender, birth, address } = req.body;
 
     if(name && gender && birth && address === undefined || name && gender && birth && address === null) {
-      res.status(401).send('Please fill all the form input');
+      res.status(400).send({
+        status: "fail",
+        message: "Please fill all the form input"
+      });
       return;
     }
     
@@ -34,23 +43,35 @@ const updateProfilePasien = async (req, res) => {
       if(result.code !== undefined) {
         throw new Error('Update Profile Failed');
       } else {
-        res.status(200).send('Update Profile Success!');
+        res.status(200).send({
+          status: "success",
+          message: 'Update Profile Success!'
+        });
       }
     } catch(err) {
-        res.status(500).send(err.message);
+        res.status(500).send({
+          status: "fail",
+          message: err.message
+        });
     }
 }
 
 const updateUserPasien = async (req, res) => {
-  const { email, password, verifyPassword } = req.body[0];
+  const { email, password, verifyPassword } = req.body;
 
   if( email && password && verifyPassword === undefined || email && password && verifyPassword === null ) {
-    res.status(401).send('Please fill out the form correctly');
+    res.status(400).send({
+      status: "fail",
+      message: "Please fill out the form correctly"
+    });
     return;
   }
 
   if(password !== verifyPassword){
-    res.status(401).send('Password and Verify Password does not macth!');
+    res.status(400).send({
+      status: "fail",
+      message: "Password and Verify Password does not macth!"
+    });
     return;
   }
   
@@ -63,10 +84,16 @@ const updateUserPasien = async (req, res) => {
     if(result.code !== undefined) {
       throw new Error('Update Profile Failed');
     } else {
-      res.status(200).send('Update Profile Success!');
+      res.status(200).send({
+        status: "success",
+        message: "Update Profile Success!"
+      });
     }
   } catch(err) {
-    res.status(500).send(err.message);
+    res.status(500).send({
+      status: "fail",
+      message: err.message
+    });
   }
 }
 
@@ -77,10 +104,17 @@ const getHistoryPasien = (req, res) => {
     if(result.code !== undefined) {
       throw new Error('Failed to get History');
     } else {
-      res.status(200).json(result);
+      res.status(200).json({
+        status: "success",
+        message: "Berhasil mengambil data",
+        data: result
+      });
     }
   } catch(err) {
-    res.status(500).send(err.message);
+    res.status(500).send({
+      status: "fail",
+      message: err.message
+    });
   }
 }
 
@@ -92,10 +126,17 @@ const getDetailHistoryPasien = async(req, res) => {
       if(result.code !== undefined) {
         throw new Error('History not found!');
       } else {
-        res.status(200).json(result);
+        res.status(200).json({
+          status: "success",
+          message: "Berhasil mengambil data",
+          data: result
+        });
       }
     } catch(err) {
-      res.status(404).send(err.message);
+      res.status(404).send({
+        status: "fail",
+        message: err.message
+      });
     }
 }
 

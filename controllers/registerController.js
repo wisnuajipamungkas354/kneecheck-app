@@ -21,7 +21,10 @@ const registerPasien = async (req, res) => {
         address
       ) === true
     ) {
-      res.status(400).send({ message: "Please fill out the form correctly" });
+      res.status(400).send({
+        status: "fail",
+        message: "Please fill out the form correctly" 
+      });
       return false;
     }
 
@@ -30,9 +33,10 @@ const registerPasien = async (req, res) => {
         .select()
         .where("email", "=", email)
         .exists();
-      console.log(checkEmail);
+      
       if (checkEmail === 1) {
         res.status(400).send({
+          status: "fail",
           message: "This email is already taken. Please choose a different one",
         });
       } else {
@@ -52,16 +56,21 @@ const registerPasien = async (req, res) => {
           address
         );
         res.send({
+          status: "success",
           message: "Account created successfully! You can now log in",
         });
       }
     } else {
       res.status(400).send({
+        status: "fail",
         message: "Invalid email format. Please enter a valid email address",
       });
     }
   } catch (err) {
-    res.status(500).send(err.message);
+    res.status(500).send({
+      status: "fail",
+      message: err.message
+    });
   }
 };
 
@@ -83,7 +92,10 @@ const registerDokter = async (req, res) => {
         hospital
       ) === true
     ) {
-      res.status(400).send({ message: "Please fill out the form correctly" });
+      res.status(400).send({ 
+        status: "fail",
+        message: "Please fill out the form correctly" 
+      });
       return false;
     }
 
@@ -95,6 +107,7 @@ const registerDokter = async (req, res) => {
 
       if (checkEmail === 1) {
         res.status(400).send({
+          statu: "fail",
           message: "This email is already taken. Please choose a different one",
         });
       } else {
@@ -113,17 +126,22 @@ const registerDokter = async (req, res) => {
           address,
           hospital
         );
-        res.send({
+        res.status(201).send({
+          status: "success",
           message: "Account created successfully! You can now log in",
         });
       }
     } else {
       res.status(400).send({
+        status: "fail",
         message: "Invalid email format. Please enter a valid email address",
       });
     }
   } catch (err) {
-    res.status(500).send(err.message);
+    res.status(500).send({
+      status: "fail",
+      message: err.message
+    });
   }
 };
 
@@ -142,9 +160,15 @@ const deletePasien = (req, res) => {
   const query = "DELETE FROM pasien WHERE id_pasien = ?";
   connection.query(query, [id], (err, rows, fields) => {
     if (err) {
-      res.status(500).send({ message: err.sqlMessage });
+      res.status(500).send({ 
+        status: "fail",
+        message: err.sqlMessage 
+      });
     } else {
-      res.send({ message: "Delete successful" });
+      res.send({ 
+        status: "success",
+        message: "Delete successful" 
+      });
     }
   });
 };

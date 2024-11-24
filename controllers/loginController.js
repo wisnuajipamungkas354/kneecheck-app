@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body[0];
+    const { email, password } = req.body;
     const userCheck = await userModel.select().where("email", "=", email).get();
 
     if (userCheck.length > 0) {
@@ -21,10 +21,16 @@ const login = async (req, res) => {
       } else {
         res
           .status(400)
-          .send({ message: "Incorrect password. Please try again" });
+          .send({ 
+            status: "fail",
+            message: "Incorrect password. Please try again" 
+          });
       }
     } else {
-      res.status(404).send({ email: "Email address not found" });
+      res.status(404).send({
+        status: "fail",
+        message: "Email address not found" 
+      });
     }
   } catch (err) {
     res.status(500).send(err.message);

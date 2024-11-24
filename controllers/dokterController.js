@@ -8,22 +8,30 @@ const getProfileDokter = async (req, res) => {
     .where("id_user", "=", req.id_user)
     .first();
   if (profileDokter.length < 0) {
-    res.status(500).send({
+    res.status(404).send({
+      status: "fail",
       message: "Dokter tidak ditemukan",
     });
     return;
   }
-  const userProfile = await userModel.where("id", "=", req.id_user).first();
 
   profileDokter[0].email = req.email;
   profileDokter[0].userType = req.userType;
 
-  res.status(200).json(profileDokter);
+  res.status(200).json({
+    status: "success",
+    message: "Berhasil mengambil data",
+    data: profileDokter
+  });
 };
 
 const getAllDokter = async (req, res) => {
   const allDokter = await dokterModel.select().get();
-  res.json(allDokter);
+  res.status(200).json({
+    status: "success",
+    message: "Berhasil mengambil data",
+    data: allDokter
+  });
 };
 
 const updateProfileDokter = async (req, res) => {
@@ -32,8 +40,11 @@ const updateProfileDokter = async (req, res) => {
   if (
     userModel.checkEmptyOrUndefined(name, gender, address, hospital) === true
   ) {
-    res.status(400).send({ message: "Please fill out the form correctly" });
-    return false;
+    res.status(400).send({ 
+      status: "fail",
+      message: "Please fill out the form correctly" 
+    });
+    return;
   }
 
   try {
@@ -47,10 +58,16 @@ const updateProfileDokter = async (req, res) => {
     if (result.code !== undefined) {
       throw new Error("Update Profile Failed");
     } else {
-      res.status(200).send("Update Profile Success!");
+      res.status(200).send({
+        status: "success",
+        message: "Update Profile Success!"
+      });
     }
   } catch (err) {
-    res.status(500).send(err.message);
+    res.status(500).send({
+      status: "fail",
+      message: err.message
+    });
   }
 };
 
@@ -59,12 +76,18 @@ const updateUserDokter = async (req, res) => {
   if (
     userModel.checkEmptyOrUndefined(email, password, verifyPassword) === true
   ) {
-    res.status(400).send({ message: "Please fill out the form correctly" });
-    return false;
+    res.status(400).send({ 
+      status: "fail",
+      message: "Please fill out the form correctly" 
+    });
+    return;
   }
 
   if (password !== verifyPassword) {
-    res.status(401).send("Password and Verify Password does not macth!");
+    res.status(401).send({
+      status: "fail",
+      message: "Password and Verify Password does not macth!"
+    });
     return;
   }
   try {
@@ -77,10 +100,16 @@ const updateUserDokter = async (req, res) => {
     if (result.code !== undefined) {
       throw new Error("Update Profile Failed");
     } else {
-      res.status(200).send("Update Profile Success!");
+      res.status(200).send({
+        status: "success",
+        message: "Update Profile Success!"
+      });
     }
   } catch (err) {
-    res.status(500).send(err.message);
+    res.status(500).send({
+      status: "fail",
+      message: err.message
+    });
   }
 };
 
