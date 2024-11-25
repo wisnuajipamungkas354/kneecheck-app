@@ -34,9 +34,19 @@ router.post("/login", login);
 // Pasien Routes
 router.get("/pasien/profile", CekToken, cekTypePasien, getProfilePasien);
 router.put("/pasien/profile/update-profile", CekToken, updateProfilePasien);
-router.put("/pasien/profile/update-user", CekToken, cekTypePasien, updateUserPasien);
+router.put(
+  "/pasien/profile/update-user",
+  CekToken,
+  cekTypePasien,
+  updateUserPasien
+);
 router.get("/pasien/history", CekToken, cekTypePasien, getHistoryPasien);
-router.get("/pasien/history/:id", CekToken, cekTypePasien, getDetailHistoryPasien);
+router.get(
+  "/pasien/history/:id",
+  CekToken,
+  cekTypePasien,
+  getDetailHistoryPasien
+);
 
 // Dokter Routes
 router.get("/dokter", CekToken, cekTypeDokter, cekTypeDokter, getAllDokter);
@@ -53,6 +63,12 @@ router.put(
   CekToken,
   cekTypeDokter,
   updateUserDokter
+);
+router.get(
+  "/dokter/history/:id",
+  CekToken,
+  cekTypeDokter,
+  getDetailHistoryPasien
 );
 
 export default router;

@@ -99,7 +99,9 @@ class Model {
   async value(col) {
     try {
       if (typeof col === "string") {
-        this.#query = `SELECT ${col} AS result FROM ${this.tableName} ${this.#where} LIMIT 1`;
+        this.#query = `SELECT ${col} AS result FROM ${this.tableName} ${
+          this.#where
+        } LIMIT 1`;
         const result = await this.#connect(this.#query);
         return result[0].result;
       } else {
@@ -170,7 +172,8 @@ class Model {
       host: "localhost",
       user: "root",
       database: "knee_db",
-      password: "knee123",
+      password: "",
+      // password: "knee123",
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0,

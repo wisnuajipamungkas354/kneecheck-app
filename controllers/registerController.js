@@ -23,7 +23,7 @@ const registerPasien = async (req, res) => {
     ) {
       res.status(400).send({
         status: "fail",
-        message: "Please fill out the form correctly" 
+        message: "Please fill out the form correctly",
       });
       return false;
     }
@@ -33,7 +33,7 @@ const registerPasien = async (req, res) => {
         .select()
         .where("email", "=", email)
         .exists();
-      
+
       if (checkEmail === 1) {
         res.status(400).send({
           status: "fail",
@@ -69,7 +69,7 @@ const registerPasien = async (req, res) => {
   } catch (err) {
     res.status(500).send({
       status: "fail",
-      message: err.message
+      message: err.message,
     });
   }
 };
@@ -92,9 +92,9 @@ const registerDokter = async (req, res) => {
         hospital
       ) === true
     ) {
-      res.status(400).send({ 
+      res.status(400).send({
         status: "fail",
-        message: "Please fill out the form correctly" 
+        message: "Please fill out the form correctly",
       });
       return false;
     }
@@ -140,7 +140,7 @@ const registerDokter = async (req, res) => {
   } catch (err) {
     res.status(500).send({
       status: "fail",
-      message: err.message
+      message: err.message,
     });
   }
 };
@@ -160,14 +160,14 @@ const deletePasien = (req, res) => {
   const query = "DELETE FROM pasien WHERE id_pasien = ?";
   connection.query(query, [id], (err, rows, fields) => {
     if (err) {
-      res.status(500).send({ 
+      res.status(500).send({
         status: "fail",
-        message: err.sqlMessage 
+        message: err.sqlMessage,
       });
     } else {
-      res.send({ 
+      res.send({
         status: "success",
-        message: "Delete successful" 
+        message: "Delete successful",
       });
     }
   });

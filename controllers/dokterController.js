@@ -21,7 +21,7 @@ const getProfileDokter = async (req, res) => {
   res.status(200).json({
     status: "success",
     message: "Berhasil mengambil data",
-    data: profileDokter
+    data: profileDokter[0],
   });
 };
 
@@ -30,7 +30,7 @@ const getAllDokter = async (req, res) => {
   res.status(200).json({
     status: "success",
     message: "Berhasil mengambil data",
-    data: allDokter
+    data: allDokter,
   });
 };
 
@@ -40,9 +40,9 @@ const updateProfileDokter = async (req, res) => {
   if (
     userModel.checkEmptyOrUndefined(name, gender, address, hospital) === true
   ) {
-    res.status(400).send({ 
+    res.status(400).send({
       status: "fail",
-      message: "Please fill out the form correctly" 
+      message: "Please fill out the form correctly",
     });
     return;
   }
@@ -60,13 +60,13 @@ const updateProfileDokter = async (req, res) => {
     } else {
       res.status(200).send({
         status: "success",
-        message: "Update Profile Success!"
+        message: "Update Profile Success!",
       });
     }
   } catch (err) {
     res.status(500).send({
       status: "fail",
-      message: err.message
+      message: err.message,
     });
   }
 };
@@ -76,9 +76,9 @@ const updateUserDokter = async (req, res) => {
   if (
     userModel.checkEmptyOrUndefined(email, password, verifyPassword) === true
   ) {
-    res.status(400).send({ 
+    res.status(400).send({
       status: "fail",
-      message: "Please fill out the form correctly" 
+      message: "Please fill out the form correctly",
     });
     return;
   }
@@ -86,7 +86,7 @@ const updateUserDokter = async (req, res) => {
   if (password !== verifyPassword) {
     res.status(401).send({
       status: "fail",
-      message: "Password and Verify Password does not macth!"
+      message: "Password and Verify Password does not macth!",
     });
     return;
   }
@@ -102,13 +102,13 @@ const updateUserDokter = async (req, res) => {
     } else {
       res.status(200).send({
         status: "success",
-        message: "Update Profile Success!"
+        message: "Update Profile Success!",
       });
     }
   } catch (err) {
     res.status(500).send({
       status: "fail",
-      message: err.message
+      message: err.message,
     });
   }
 };
