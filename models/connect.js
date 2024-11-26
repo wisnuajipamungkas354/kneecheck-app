@@ -69,7 +69,7 @@ class Model {
   }
 
   count(col = "*") {
-    this.#query = `SELECT COUNT (${col}) FROM ${this.tableName} ${
+    this.#query = `SELECT COUNT (${col}) as total FROM ${this.tableName} ${
       this.#where
     } ${this.#orderBy}`;
     return this.#connect(this.#query);
@@ -169,22 +169,22 @@ class Model {
    * @param query string
    */
 
-  customQuery(query){
+  customQuery(query) {
     try {
-      if(!query) {
-        throw new Error('Masukkan sintaks query');
+      if (!query) {
+        throw new Error("Masukkan sintaks query");
       }
 
-      if(typeof query === "string"){
+      if (typeof query === "string") {
         return this.#connect(query);
       } else {
-        throw new Error('Sintaks query harus berupa string!');
+        throw new Error("Sintaks query harus berupa string!");
       }
-    } catch(err) {
+    } catch (err) {
       console.log(err.message);
     }
   }
-  
+
   /**
    * Connection to Database
    * @return mysql.createConnection

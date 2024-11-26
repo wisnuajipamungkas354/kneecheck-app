@@ -18,6 +18,7 @@ import {
   updateProfileDokter,
   updateUserDokter,
   getAllHistory,
+  dashboardDokter,
 } from "../controllers/dokterController.js";
 import { cekTypeDokter, cekTypePasien } from "../middleware/cekUserType.js";
 const router = express.Router();
@@ -70,5 +71,6 @@ router.get(
   cekTypeDokter,
   getDetailHistoryPasien
 );
+router.get("/dokter/dashboard", CekToken, cekTypeDokter, dashboardDokter);
 
 export default router;
