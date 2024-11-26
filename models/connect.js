@@ -164,6 +164,28 @@ class Model {
   }
 
   /**
+   * Custom Query
+   * @returns YOUR CUSTOM QUERY
+   * @param query string
+   */
+
+  customQuery(query){
+    try {
+      if(!query) {
+        throw new Error('Masukkan sintaks query');
+      }
+
+      if(typeof query === "string"){
+        return this.#connect(query);
+      } else {
+        throw new Error('Sintaks query harus berupa string!');
+      }
+    } catch(err) {
+      console.log(err.message);
+    }
+  }
+  
+  /**
    * Connection to Database
    * @return mysql.createConnection
    */
