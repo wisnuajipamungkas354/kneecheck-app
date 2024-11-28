@@ -71,6 +71,6 @@ router.get(
   cekTypeDokter,
   getDetailHistoryPasien
 );
-router.get("/dokter/dashboard", CekToken, cekTypeDokter, dashboardDokter);
+router.get("/dashboard", CekToken, cekTypeDokter, dashboardDokter);
 
 export default router;

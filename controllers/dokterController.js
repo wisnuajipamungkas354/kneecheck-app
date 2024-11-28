@@ -2,6 +2,7 @@ import dokterModel from "../models/dokterModel.js";
 import userModel from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import historyXrayModel from "../models/historyXrayModel.js";
+import multer from "multer";
 
 const getProfileDokter = async (req, res) => {
   const profileDokter = await dokterModel

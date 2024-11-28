@@ -191,11 +191,10 @@ class Model {
    */
   async #connect(sql) {
     const connection = mysql.createConnection({
-      host: "localhost",
+      host: "35.230.28.15",
       user: "root",
       database: "knee_db",
-      password: "",
-      // password: "knee123",
+      password: "knee123",
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0,
