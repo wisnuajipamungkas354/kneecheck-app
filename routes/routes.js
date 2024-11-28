@@ -7,6 +7,7 @@ import {
   getDetailHistoryPasien,
   getHistoryPasien,
   getProfilePasien,
+  homePasien,
   updateProfilePasien,
   updateUserPasien,
 } from "../controllers/pasienController.js";
@@ -33,6 +34,7 @@ router.post("/register/dokter", registerDokter);
 router.post("/login", login);
 
 // Pasien Routes
+router.get("/home", CekToken, cekTypePasien, homePasien);
 router.get("/pasien/profile", CekToken, cekTypePasien, getProfilePasien);
 router.put("/pasien/profile/update-profile", CekToken, updateProfilePasien);
 router.put(

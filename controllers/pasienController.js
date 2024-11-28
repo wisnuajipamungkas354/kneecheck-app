@@ -3,6 +3,26 @@ import pasienModel from "../models/pasienModel.js";
 import userModel from "../models/userModel.js";
 import historyXrayModel from "../models/historyXrayModel.js";
 
+const homePasien = async (req, res) => {
+  const caseTotal = await historyXrayModel.count();
+  const caseGender = await historyXrayModel.customQuery(
+    "SELECT pasien.gender, COUNT(*) AS total FROM pasien JOIN history_xray ON pasien.id_user = history_xray.id_user GROUP BY gender ORDER BY total DESC LIMIT 1;"
+  );
+  const caseAge = await historyXrayModel.customQuery(
+    "SELECT TIMESTAMPDIFF(YEAR, pasien.birth, CURDATE()) AS age, COUNT(*) AS total FROM pasien JOIN history_xray ON pasien.id_user = history_xray.id_user GROUP BY age ORDER BY total DESC LIMIT 1;"
+  );
+  
+  res.status(200).json({
+    status: "success",
+    message: "Fetch data Success",
+    data: {
+      keseluruhan: caseTotal[0]?.total || 0,
+      gender: caseGender[0]?.total || 0,
+      age: caseAge[0]?.total || 0,
+    }
+  });
+}
+
 const getProfilePasien = async (req, res) => {
   let profilePasien = await pasienModel
     .where("id_user", "=", req.id_user)
@@ -157,6 +177,7 @@ const saveHistoryPasien = (req, res) => {
 };
 
 export {
+  homePasien,
   getProfilePasien,
   updateProfilePasien,
   updateUserPasien,
