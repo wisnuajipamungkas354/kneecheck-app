@@ -4,7 +4,6 @@ import loadModel from "../services/loadModel.js";
 import predictClassification from "../services/inferenceService.js";
 
 const xrayPredictionController = async (req, res) => {
-  const model = await loadModel();
   const image = req.file;
   console.log(image);
 
