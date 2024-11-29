@@ -68,8 +68,8 @@ class Model {
     return this.#connect(this.#query);
   }
 
-  count(col = "*") {
-    this.#query = `SELECT COUNT (${col}) as total FROM ${this.tableName} ${
+  count(col = "*", alias = 'total') {
+    this.#query = `SELECT COUNT (${col}) AS ${alias} FROM ${this.tableName} ${
       this.#where
     } ${this.#orderBy}`;
     return this.#connect(this.#query);
