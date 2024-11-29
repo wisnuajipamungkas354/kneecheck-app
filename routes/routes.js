@@ -21,6 +21,8 @@ import {
   dashboardDokter,
 } from "../controllers/dokterController.js";
 import { cekTypeDokter, cekTypePasien } from "../middleware/cekUserType.js";
+import xrayUpload from "../middleware/xrayUpload.js";
+import { xrayPredictionController } from "../controllers/historyController.js";
 const router = express.Router();
 
 router.get("/", CekToken, (req, res) => {
@@ -72,5 +74,6 @@ router.get(
   getDetailHistoryPasien
 );
 router.get("/dashboard", CekToken, cekTypeDokter, dashboardDokter);
+router.post("/upload", xrayUpload.single("xray"), xrayPredictionController);
 
 export default router;
