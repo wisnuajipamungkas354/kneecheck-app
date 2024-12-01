@@ -25,17 +25,17 @@ async function predictClassification(model, image) {
     let explanation, suggestion;
     if (label === "Healthy") {
       const level = 1;
-      const suggestion = "Gk usah ke dokter!";
+
       return { label, level, suggestion };
     }
     if (label === "Minimal") {
       const level = 2;
-      const suggestion = "coba deh kedokter bang!";
+
       return { label, level, suggestion };
     }
     if (label === "Severe") {
       const level = 3;
-      const suggestion = "coba deh kedokter bang!";
+
       return { label, level, suggestion };
     }
   } catch (error) {

@@ -145,37 +145,7 @@ const registerDokter = async (req, res) => {
   }
 };
 
-const getAllPasien = async (req, res) => {
-  const result = await pasienModel.select().get();
-  res.send(result);
-};
-const getAllUser = async (req, res) => {
-  const result = await userModel.select().get();
-  res.send(result);
-};
-
-const deletePasien = (req, res) => {
-  const id = req.params.id;
-
-  const query = "DELETE FROM pasien WHERE id_pasien = ?";
-  connection.query(query, [id], (err, rows, fields) => {
-    if (err) {
-      res.status(500).send({
-        status: "fail",
-        message: err.sqlMessage,
-      });
-    } else {
-      res.send({
-        status: "success",
-        message: "Delete successful",
-      });
-    }
-  });
-};
 export {
   registerPasien,
-  getAllPasien,
-  deletePasien,
-  getAllUser,
   registerDokter,
 };

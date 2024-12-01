@@ -143,12 +143,14 @@ const dashboardDokter = async (req, res) => {
         .where("tingkat_keparahan", "=", 3)
         .value("COUNT(tingkat_keparahan)"),
     };
+
     res.status(200).json({
       status: "success",
       message: "Berhasil mengambil data",
       data: {
-        age: age[0],
-        gender: gender[0],
+        age: age[0] === undefined ? { age: null, total: 0 } : age[0],
+        gender:
+          gender[0] === undefined ? { gender: null, total: 0 } : gender[0],
         keseluruhan: keseluruhan[0],
         level: level,
       },
