@@ -24,10 +24,16 @@ import {
 import { cekTypeDokter, cekTypePasien } from "../middleware/cekUserType.js";
 import xrayUpload from "../middleware/xrayUpload.js";
 import { xrayPredictionController } from "../controllers/historyController.js";
+import pasienModel from "../models/pasienModel.js";
 const router = express.Router();
 
-router.get("/", CekToken, (req, res) => {
-  res.send("Welcome to KneeCheck App");
+router.get("/", async (req, res) => {
+  const pasien = await pasienModel.get();
+  res.json({
+    status: "success",
+    message: "Berhasil mengambil data pasien!",
+    data: pasien
+  });
 });
 
 // Register and Login

@@ -4,7 +4,7 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": " node ./app.js",
+    "start": " node app.js",
     "start-dev": "nodemon run start"
   },
   "repository": {
@@ -21,7 +21,7 @@
   "dependencies": {
     "@google-cloud/debug-agent": "^9.0.1",
     "@google-cloud/storage": "^2.4.2",
-    "@tensorflow/tfjs-node": "^4.14.0",
+    "@tensorflow/tfjs-node": "^4.22.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.7",
