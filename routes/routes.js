@@ -24,7 +24,7 @@ import {
 import { cekTypeDokter, cekTypePasien } from "../middleware/cekUserType.js";
 import { uploadXray } from "../middleware/xrayUpload.js";
 import { xrayPredictionController } from "../controllers/historyController.js";
-import pasienModel from "../models/pasienModel.js";
+
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -33,6 +33,7 @@ router.get("/", async (req, res) => {
     message: "Berhasil Connect!",
   });
 });
+
 
 // Register and Login
 router.post("/register/pasien", registerPasien);
