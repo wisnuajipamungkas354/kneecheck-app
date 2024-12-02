@@ -28,11 +28,9 @@ import pasienModel from "../models/pasienModel.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const pasien = await pasienModel.get();
   res.json({
     status: "success",
-    message: "Berhasil mengambil data pasien!",
-    data: pasien,
+    message: "Berhasil Connect!",
   });
 });
 
@@ -84,6 +82,7 @@ router.get(
 router.get("/dashboard", CekToken, cekTypeDokter, dashboardDokter);
 router.post(
   "/upload-xray",
+  CekToken,
   uploadXray.single("xray"),
   xrayPredictionController
 );
