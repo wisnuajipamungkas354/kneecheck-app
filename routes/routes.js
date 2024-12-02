@@ -22,7 +22,7 @@ import {
   dashboardDokter,
 } from "../controllers/dokterController.js";
 import { cekTypeDokter, cekTypePasien } from "../middleware/cekUserType.js";
-import xrayUpload from "../middleware/xrayUpload.js";
+import { uploadXray } from "../middleware/xrayUpload.js";
 import { xrayPredictionController } from "../controllers/historyController.js";
 import pasienModel from "../models/pasienModel.js";
 const router = express.Router();
@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
   res.json({
     status: "success",
     message: "Berhasil mengambil data pasien!",
-    data: pasien
+    data: pasien,
   });
 });
 
@@ -82,6 +82,10 @@ router.get(
   getDetailHistoryPasien
 );
 router.get("/dashboard", CekToken, cekTypeDokter, dashboardDokter);
-router.post("/upload", xrayUpload.single("xray"), xrayPredictionController);
+router.post(
+  "/upload-xray",
+  uploadXray.single("xray"),
+  xrayPredictionController
+);
 
 export default router;
