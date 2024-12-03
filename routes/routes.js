@@ -31,7 +31,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   res.json({
     status: "success",
-    message: "Berhasil Connect!",
+    message: "Berhasil Connect! Deploy V1",
   });
 });
 

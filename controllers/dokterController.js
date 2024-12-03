@@ -124,7 +124,7 @@ const getAllHistory = async (req, res) => {
 
 const saveHistoryDokter = async (req, res) => {
   try{
-    const { id_xray, img, confidence_score, label } = req.body;
+    const { id_xray, img, confidence_score, label, name, gender, birth,  } = req.body;
     const nm_scanner = await dokterModel.where('id_user', '=', req.id_user).value('name');
     const timestamp = new Date();
     const currentDate = dateFormat(timestamp, "yyyy-mm-dd");

@@ -19,7 +19,7 @@ const homePasien = async (req, res) => {
     status: "success",
     message: "Fetch data Success",
     data: {
-      TotalScanned: caseTotal[0]?.total || 0,
+      totalScanned: caseTotal[0]?.total || 0,
       gender: caseGender[0] || 0,
       age: caseAge[0] || 0,
     }
