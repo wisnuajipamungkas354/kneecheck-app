@@ -178,11 +178,12 @@ const getDetailHistoryPasien = async (req, res) => {
 const saveHistoryPasien = async (req, res) => {
   try{
     const { id_xray, img, confidence_score, label } = req.body;
-    const nm_scanner = await pasienModel.where('id_user', '=', req.id_user).value('name');
+    const id_scanner = await pasienModel.where('id_user', '=', req.id_user).value('id_pasien');
+    const id_pasien = id_scanner;
     const timestamp = new Date();
     const currentDate = dateFormat(timestamp, "yyyy-mm-dd");
 
-    const result = await historyXrayModel.create(id_xray, req.id_user, nm_scanner, img, confidence_score, label, currentDate);
+    const result = await historyXrayModel.create(id_xray, id_scanner, id_pasien, img, confidence_score, label, currentDate);
 
     if (result.code !== undefined) {
       throw new Error("Update Profile Failed");
