@@ -22,9 +22,9 @@ import {
   dashboardDokter,
 } from "../controllers/dokterController.js";
 import { cekTypeDokter, cekTypePasien } from "../middleware/cekUserType.js";
-import { uploadXray } from "../middleware/xrayUpload.js";
+import { cekImg } from "../middleware/cekImg.js";
 import { xrayPredictionController } from "../controllers/historyController.js";
-
+import { uploadImg } from "../services/storeData.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -33,7 +33,6 @@ router.get("/", async (req, res) => {
     message: "Berhasil Connect!",
   });
 });
-
 
 // Register and Login
 router.post("/register/pasien", registerPasien);
@@ -83,9 +82,8 @@ router.get(
 router.get("/dashboard", CekToken, cekTypeDokter, dashboardDokter);
 router.post(
   "/upload-xray",
-  CekToken,
-  uploadXray.single("xray"),
+  cekImg.single("img"),
+  uploadImg,
   xrayPredictionController
 );
-
 export default router;
