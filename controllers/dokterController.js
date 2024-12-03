@@ -151,24 +151,25 @@ const saveHistoryDokter = async (req, res) => {
 const dashboardDokter = async (req, res) => {
   try {
     const age = await dokterModel.customQuery(
-      "SELECT TIMESTAMPDIFF(YEAR, pasien.birth, CURDATE()) AS age, COUNT(*) AS total FROM pasien JOIN history_xray ON pasien.id_user = history_xray.id_user GROUP BY age ORDER BY total DESC LIMIT 1;"
+      "SELECT TIMESTAMPDIFF(YEAR, pasien.birth, CURDATE()) AS average, COUNT(*) AS total FROM pasien JOIN history_xray ON pasien.id_user = history_xray.id_user GROUP BY average ORDER BY total DESC LIMIT 1;"
     );
     const gender = await dokterModel.customQuery(
-      "SELECT pasien.gender, COUNT(*) AS total FROM pasien JOIN history_xray ON pasien.id_user = history_xray.id_user GROUP BY gender ORDER BY total DESC LIMIT 1;"
+      "SELECT pasien.gender AS average, COUNT(*) AS total FROM pasien JOIN history_xray ON pasien.id_user = history_xray.id_user GROUP BY average ORDER BY total DESC LIMIT 1;"
     );
+    age[0].average = `${age[0].average} Tahun`;
+    gender[0].average = gender[0].average === "L" ? "Laki-laki" : "Perempuan";
     const keseluruhan = await historyXrayModel.count();
     const level = {
-      level1: await historyXrayModel
-        .where("tingkat_keparahan", "=", 1)
-        .value("COUNT(tingkat_keparahan)"),
-      level2: await historyXrayModel
-        .where("tingkat_keparahan", "=", 2)
-        .value("COUNT(tingkat_keparahan)"),
-      level3: await historyXrayModel
-        .where("tingkat_keparahan", "=", 3)
-        .value("COUNT(tingkat_keparahan)"),
+      normal: await historyXrayModel
+        .where("confidence_score", "=", 0)
+        .value("COUNT(confidence_score)"),
+      kneePain: await historyXrayModel
+        .where("confidence_score", "=", 2)
+        .value("COUNT(confidence_score)"),
+      severeKneePain: await historyXrayModel
+        .where("confidence_score", "=", 4)
+        .value("COUNT(confidence_score)"),
     };
-
     res.status(200).json({
       status: "success",
       message: "Berhasil mengambil data",
@@ -176,8 +177,9 @@ const dashboardDokter = async (req, res) => {
         age: age[0] === undefined ? { age: null, total: 0 } : age[0],
         gender:
           gender[0] === undefined ? { gender: null, total: 0 } : gender[0],
-        keseluruhan: keseluruhan[0],
-        level: level,
+        totalScanned:
+          keseluruhan[0].total === undefined ? 0 : keseluruhan[0].total,
+        label: level,
       },
     });
   } catch (err) {
