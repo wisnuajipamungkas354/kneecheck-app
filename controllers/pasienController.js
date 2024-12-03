@@ -6,11 +6,11 @@ import dateFormat from "dateformat";
 
 const homePasien = async (req, res) => {
   const caseTotal = await historyXrayModel.count();
-  let caseGender = await historyXrayModel.customQuery(
-    "SELECT pasien.gender AS average, COUNT(*) AS total_kasus FROM pasien JOIN history_xray ON pasien.id_user = history_xray.id_scanner GROUP BY average ORDER BY total_kasus DESC LIMIT 1;"
+  let caseGenderPasien = await historyXrayModel.customQuery(
+    "SELECT pasien.gender AS average, COUNT(*) AS total_kasus FROM pasien JOIN history_xray ON pasien.id_pasien = history_xray.id_scanner GROUP BY average ORDER BY total_kasus DESC LIMIT 1;"
   );
   let caseAge = await historyXrayModel.customQuery(
-    "SELECT TIMESTAMPDIFF(YEAR, pasien.birth, CURDATE()) AS average, COUNT(*) AS total_kasus FROM pasien JOIN history_xray ON pasien.id_user = history_xray.id_scanner GROUP BY average ORDER BY total_kasus DESC LIMIT 1;"
+    "SELECT TIMESTAMPDIFF(YEAR, pasien.birth, CURDATE()) AS average, COUNT(*) AS total_kasus FROM pasien JOIN history_xray ON pasien.id_pasien = history_xray.id_scanner GROUP BY average ORDER BY total_kasus DESC LIMIT 1;"
   );
   caseGender.map((d) => d.average == 'L' ? d.average = 'Laki-laki' : d.average = 'Perempuan');
   caseAge.map((d) => d.average = `${d.average} Tahun`);
@@ -132,9 +132,10 @@ const updateUserPasien = async (req, res) => {
   }
 };
 
-const getHistoryPasien = (req, res) => {
+const getHistoryPasien = async(req, res) => {
   try {
-    const result = historyXrayModel.where("id_user", "=", req.id_user).get();
+    const id_pasien = await pasienModel.where('id_user', '=', req.id_user).value('id_pasien');
+    const result = await historyXrayModel.where("id_scanner", "=", id_pasien).get();
 
     if (result.code !== undefined) {
       throw new Error("Failed to get History");
