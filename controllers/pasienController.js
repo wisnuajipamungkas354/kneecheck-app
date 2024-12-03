@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import pasienModel from "../models/pasienModel.js";
 import userModel from "../models/userModel.js";
 import historyXrayModel from "../models/historyXrayModel.js";
+import dateFormat from "dateformat";
 
 const homePasien = async (req, res) => {
   const caseTotal = await historyXrayModel.count();
@@ -175,21 +176,14 @@ const getDetailHistoryPasien = async (req, res) => {
 };
 
 const saveHistoryPasien = async (req, res) => {
-  const { id_xray, img, confidence_score, label } = req.body;
-  const nm_scanner = pasienModel.where('id_user', '=', req.id_user).value();
-
-  const data = {
-    id_xray,
-    id_user,
-    nm_scanner,
-    img,
-    confidence_score,
-    label,
-    tgl_scan,
-  }
-
   try{
-    const result = await historyXrayModel.create(data);
+    const { id_xray, img, confidence_score, label } = req.body;
+    const nm_scanner = await pasienModel.where('id_user', '=', req.id_user).value('name');
+    const timestamp = new Date();
+    const currentDate = dateFormat(timestamp, "yyyy-mm-dd");
+
+    const result = await historyXrayModel.create(id_xray, req.id_user, nm_scanner, img, confidence_score, label, currentDate);
+
     if (result.code !== undefined) {
       throw new Error("Update Profile Failed");
     } else {
@@ -198,11 +192,11 @@ const saveHistoryPasien = async (req, res) => {
         message: "Berhasil menyimpan ke histori"
       });
     }
+
   } catch(err) {
     return res.status(500).json({
       status: "fail",
-      message: "Gagal menyimpan ke history",
-      error: err.message
+      message: "Gagal menyimpan ke history"
     });
   }
 };
