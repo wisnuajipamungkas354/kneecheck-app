@@ -40,7 +40,7 @@ const xrayPredictionController = async (req, res) => {
       .select("tips")
       .where("id", "=", data.confidenceScore)
       .first();
-    data.pengobatan = pengobatan[0];
+    data.pengobatan = pengobatan[0].tips;
     res.json({
       status: "success",
       message: "File berhasil dikirim ke Flask",
