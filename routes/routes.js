@@ -8,6 +8,7 @@ import {
   getHistoryPasien,
   getProfilePasien,
   homePasien,
+  saveHistoryPasien,
   updateProfilePasien,
   updateUserPasien,
 } from "../controllers/pasienController.js";
@@ -43,43 +44,19 @@ router.post("/login", login);
 router.get("/home", CekToken, cekTypePasien, homePasien);
 router.get("/pasien/profile", CekToken, cekTypePasien, getProfilePasien);
 router.put("/pasien/profile/update-profile", CekToken, updateProfilePasien);
-router.put(
-  "/pasien/profile/update-user",
-  CekToken,
-  cekTypePasien,
-  updateUserPasien
-);
+router.put("/pasien/profile/update-user", CekToken, cekTypePasien, updateUserPasien);
 router.get("/pasien/history", CekToken, cekTypePasien, getHistoryPasien);
-router.get(
-  "/pasien/history/:id",
-  CekToken,
-  cekTypePasien,
-  getDetailHistoryPasien
-);
+router.get("/pasien/history/:id", CekToken, cekTypePasien, getDetailHistoryPasien);
+router.post("/pasien/history/save", CekToken, cekTypePasien, saveHistoryPasien);
 
 // Dokter Routes
+router.get("/dashboard", CekToken, cekTypeDokter, dashboardDokter);
 router.get("/dokter", CekToken, cekTypeDokter, cekTypeDokter, getAllDokter);
 router.get("/dokter/history", CekToken, cekTypeDokter, getAllHistory);
 router.get("/dokter/profile", CekToken, cekTypeDokter, getProfileDokter);
-router.put(
-  "/dokter/profile/update-profile",
-  CekToken,
-  cekTypeDokter,
-  updateProfileDokter
-);
-router.put(
-  "/dokter/profile/update-user",
-  CekToken,
-  cekTypeDokter,
-  updateUserDokter
-);
-router.get(
-  "/dokter/history/:id",
-  CekToken,
-  cekTypeDokter,
-  getDetailHistoryPasien
-);
-router.get("/dashboard", CekToken, cekTypeDokter, dashboardDokter);
+router.put("/dokter/profile/update-profile", CekToken, cekTypeDokter, updateProfileDokter);
+router.put("/dokter/profile/update-user", CekToken, cekTypeDokter, updateUserDokter);
+router.get("/dokter/history/:id", CekToken, cekTypeDokter,getDetailHistoryPasien);
 
 // predict
 router.post(

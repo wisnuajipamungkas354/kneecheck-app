@@ -174,8 +174,37 @@ const getDetailHistoryPasien = async (req, res) => {
   }
 };
 
-const saveHistoryPasien = (req, res) => {
-  //
+const saveHistoryPasien = async (req, res) => {
+  const { id_xray, img, confidence_score, label } = req.body;
+  const nm_scanner = pasienModel.where('id_user', '=', req.id_user).value();
+
+  const data = {
+    id_xray,
+    id_user,
+    nm_scanner,
+    img,
+    confidence_score,
+    label,
+    tgl_scan,
+  }
+
+  try{
+    const result = await historyXrayModel.create(data);
+    if (result.code !== undefined) {
+      throw new Error("Update Profile Failed");
+    } else {
+      return res.status(201).json({
+        status: "success",
+        message: "Berhasil menyimpan ke histori"
+      });
+    }
+  } catch(err) {
+    return res.status(500).json({
+      status: "fail",
+      message: "Gagal menyimpan ke history",
+      error: err.message
+    });
+  }
 };
 
 export {

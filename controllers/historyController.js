@@ -35,8 +35,8 @@ const xrayPredictionController = async (req, res) => {
       return false;
     }
     const data = flaskResponse.data.data;
-    data["id-xray"] = id;
-    data.url = filePath;
+    data.id_xray = id;
+    data.img_path = filePath;
     const pengobatan = await tipsPengobatanModel
       .select("tips")
       .where("id", "=", data.confidenceScore)
