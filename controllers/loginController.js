@@ -13,6 +13,7 @@ const login = async (req, res) => {
       const user = userCheck[0];
       const checkPassword = await bcrypt.compare(password, user.password);
       let name;
+      let id;
       if (checkPassword) {
         const payload = {
           id_user: user.id,
@@ -21,13 +22,15 @@ const login = async (req, res) => {
         };
 
         if(user.user_type === 'Dokter') {
+          id = await dokterModel.where('id_user', '=', user.id).value('id_dokter');
           name = await dokterModel.where('id_user', '=', user.id).value('name');
         } else {
+          id = await pasienModel.where('id_user', '=', user.id).value('id_pasien');
           name = await pasienModel.where('id_user', '=', user.id).value('name');
         }
 
         const token = jwt.sign(payload, "kN33cH3k", { expiresIn: "1day" });
-        res.json({ token, id_user: user.id, name, userType: user.user_type });
+        res.json({ token, id, name, userType: user.user_type });
       } else {
         res
           .status(400)
