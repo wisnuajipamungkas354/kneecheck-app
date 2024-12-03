@@ -81,7 +81,7 @@ router.get(
 );
 router.get("/dashboard", CekToken, cekTypeDokter, dashboardDokter);
 router.post(
-  "/upload-xray",
+  "/predict",
   cekImg.single("img"),
   uploadImg,
   xrayPredictionController
