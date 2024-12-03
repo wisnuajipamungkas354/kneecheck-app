@@ -122,6 +122,32 @@ const getAllHistory = async (req, res) => {
   }
 };
 
+const saveHistoryDokter = async (req, res) => {
+  try{
+    const { id_xray, img, confidence_score, label } = req.body;
+    const nm_scanner = await dokterModel.where('id_user', '=', req.id_user).value('name');
+    const timestamp = new Date();
+    const currentDate = dateFormat(timestamp, "yyyy-mm-dd");
+
+    const result = await historyXrayModel.create(id_xray, req.id_user, nm_scanner, img, confidence_score, label, currentDate);
+
+    if (result.code !== undefined) {
+      throw new Error("Update Profile Failed");
+    } else {
+      return res.status(201).json({
+        status: "success",
+        message: "Berhasil menyimpan ke histori"
+      });
+    }
+    
+  } catch(err) {
+    return res.status(500).json({
+      status: "fail",
+      message: "Gagal menyimpan ke history"
+    });
+  }
+};
+
 const dashboardDokter = async (req, res) => {
   try {
     const age = await dokterModel.customQuery(
