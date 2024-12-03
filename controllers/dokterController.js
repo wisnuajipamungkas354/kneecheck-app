@@ -125,61 +125,95 @@ const getAllHistory = async (req, res) => {
 };
 
 const saveHistoryDokter = async (req, res) => {
-  try{
+  try {
     const { id_xray, img, confidence_score, label } = req.body;
-    const id_scanner = await dokterModel.where('id_user', '=', req.id_user).value('id_dokter');
+    const id_scanner = await dokterModel
+      .where("id_user", "=", req.id_user)
+      .value("id_dokter");
     const id_pasien = id_scanner;
     const timestamp = new Date();
     const currentDate = dateFormat(timestamp, "yyyy-mm-dd");
 
-    const result = await historyXrayModel.create(id_xray, id_scanner, id_pasien, img, confidence_score, label, currentDate);
+    const result = await historyXrayModel.create(
+      id_xray,
+      id_scanner,
+      id_pasien,
+      img,
+      confidence_score,
+      label,
+      currentDate
+    );
 
     if (result.code !== undefined) {
       throw new Error("Update Profile Failed");
     } else {
       return res.status(201).json({
         status: "success",
-        message: "Berhasil menyimpan ke histori"
+        message: "Berhasil menyimpan ke histori",
       });
     }
-
-  } catch(err) {
+  } catch (err) {
     return res.status(500).json({
       status: "fail",
-      message: "Gagal menyimpan ke history"
+      message: "Gagal menyimpan ke history",
     });
   }
 };
 
 const saveHistoryNewPasien = async (req, res) => {
-  try{
-    const { id_xray, img, confidence_score, label, name, gender, birth, address } = req.body;
+  try {
+    const {
+      id_xray,
+      img,
+      confidence_score,
+      label,
+      name,
+      gender,
+      birth,
+      address,
+    } = req.body;
     const id_pasien = pasienModel.generateId();
 
-    const resultPasien = await pasienModel.create(id_pasien, null ,name, gender, birth, address);
-    if(resultPasien.code !== undefined) {
+    const resultPasien = await pasienModel.create(
+      id_pasien,
+      null,
+      name,
+      gender,
+      birth,
+      address
+    );
+    if (resultPasien.code !== undefined) {
       throw new Error("Gagal menambahkan data pasien");
     }
 
-    const id_scanner = await dokterModel.where('id_user', '=', req.id_user).value('id_dokter');
+    const id_scanner = await dokterModel
+      .where("id_user", "=", req.id_user)
+      .value("id_dokter");
     const timestamp = new Date();
     const currentDate = dateFormat(timestamp, "yyyy-mm-dd");
 
-    const result = await historyXrayModel.create(id_xray, id_scanner, id_pasien, img, confidence_score, label, currentDate);
+    const result = await historyXrayModel.create(
+      id_xray,
+      id_scanner,
+      id_pasien,
+      img,
+      confidence_score,
+      label,
+      currentDate
+    );
 
     if (result.code !== undefined) {
       throw new Error("Update Profile Failed");
     } else {
       return res.status(201).json({
         status: "success",
-        message: "Berhasil menyimpan ke histori"
+        message: "Berhasil menyimpan ke histori",
       });
     }
-
-  } catch(err) {
+  } catch (err) {
     return res.status(500).json({
       status: "fail",
-      message: "Gagal menyimpan ke history"
+      message: "Gagal menyimpan ke history",
     });
   }
 };
@@ -187,11 +221,12 @@ const saveHistoryNewPasien = async (req, res) => {
 const dashboardDokter = async (req, res) => {
   try {
     const age = await dokterModel.customQuery(
-      "SELECT TIMESTAMPDIFF(YEAR, pasien.birth, CURDATE()) AS average, COUNT(*) AS total FROM pasien JOIN history_xray ON pasien.id_user = history_xray.id_user GROUP BY average ORDER BY total DESC LIMIT 1;"
+      "SELECT TIMESTAMPDIFF(YEAR, pasien.birth, CURDATE()) AS average, COUNT(*) AS total FROM pasien JOIN history_xray ON pasien.id_pasien = history_xray.id_pasien GROUP BY average ORDER BY total DESC LIMIT 1;"
     );
     const gender = await dokterModel.customQuery(
-      "SELECT pasien.gender AS average, COUNT(*) AS total FROM pasien JOIN history_xray ON pasien.id_user = history_xray.id_user GROUP BY average ORDER BY total DESC LIMIT 1;"
+      "SELECT pasien.gender AS average, COUNT(*) AS total FROM pasien JOIN history_xray ON pasien.id_pasien = history_xray.id_pasien GROUP BY average ORDER BY total DESC LIMIT 1;"
     );
+    console.log(age);
     age[0].average = `${age[0].average} Tahun`;
     gender[0].average = gender[0].average === "L" ? "Laki-laki" : "Perempuan";
     const keseluruhan = await historyXrayModel.count();
