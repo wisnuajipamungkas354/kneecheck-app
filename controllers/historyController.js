@@ -12,6 +12,7 @@ const xrayPredictionController = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });
     }
+    const id = req.id;
     const filePath = req.url;
     const folderFile = req.folderFile;
     const file = bucket.file(folderFile);
@@ -27,13 +28,19 @@ const xrayPredictionController = async (req, res) => {
         },
       }
     );
-    const data = flaskResponse.data;
+    if (flaskResponse.data.status !== "success") {
+      res
+        .status(500)
+        .json({ status: "fail", message: "Failed connect to flask" });
+      return false;
+    }
+    const data = flaskResponse.data.data;
     data.url = filePath;
-    // const pengobatan = await tipsPengobatanModel
-    //   .select("tips")
-    //   .where("id", "=", data.confidenceScore)
-    //   .first();
-    // data.pengobatan = pengobatan[0];
+    const pengobatan = await tipsPengobatanModel
+      .select("tips")
+      .where("id", "=", data.confidenceScore)
+      .first();
+    data.pengobatan = pengobatan[0];
     res.json({
       status: "success",
       message: "File berhasil dikirim ke Flask",

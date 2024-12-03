@@ -35,6 +35,7 @@ const uploadImg = async (req, res, next) => {
   stream.on("finish", () => {
     req.url = `https://storage.googleapis.com/${bucketName}/${file.name}`;
     req.folderFile = file.name;
+    req.id = id;
     next();
   });
 
