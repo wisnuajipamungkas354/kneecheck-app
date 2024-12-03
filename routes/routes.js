@@ -21,6 +21,8 @@ import {
   updateUserDokter,
   getAllHistory,
   dashboardDokter,
+  saveHistoryDokter,
+  saveHistoryNewPasien,
 } from "../controllers/dokterController.js";
 import { cekTypeDokter, cekTypePasien } from "../middleware/cekUserType.js";
 import { cekImg } from "../middleware/cekImg.js";
@@ -57,6 +59,8 @@ router.get("/dokter/profile", CekToken, cekTypeDokter, getProfileDokter);
 router.put("/dokter/profile/update-profile", CekToken, cekTypeDokter, updateProfileDokter);
 router.put("/dokter/profile/update-user", CekToken, cekTypeDokter, updateUserDokter);
 router.get("/dokter/history/:id", CekToken, cekTypeDokter,getDetailHistoryPasien);
+router.post("/dokter/history/save", CekToken, cekTypeDokter,saveHistoryDokter);
+router.post("/dokter/history/save-new-pasien", CekToken, cekTypeDokter,saveHistoryNewPasien);
 
 // predict
 router.post(

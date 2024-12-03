@@ -2,6 +2,8 @@ import dokterModel from "../models/dokterModel.js";
 import userModel from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import historyXrayModel from "../models/historyXrayModel.js";
+import dateFormat from "dateformat";
+import pasienModel from "../models/pasienModel.js";
 
 const getProfileDokter = async (req, res) => {
   const profileDokter = await dokterModel
@@ -124,12 +126,13 @@ const getAllHistory = async (req, res) => {
 
 const saveHistoryDokter = async (req, res) => {
   try{
-    const { id_xray, img, confidence_score, label, name, gender, birth,  } = req.body;
-    const nm_scanner = await dokterModel.where('id_user', '=', req.id_user).value('name');
+    const { id_xray, img, confidence_score, label } = req.body;
+    const id_scanner = await dokterModel.where('id_user', '=', req.id_user).value('id_dokter');
+    const id_pasien = id_scanner;
     const timestamp = new Date();
     const currentDate = dateFormat(timestamp, "yyyy-mm-dd");
 
-    const result = await historyXrayModel.create(id_xray, req.id_user, nm_scanner, img, confidence_score, label, currentDate);
+    const result = await historyXrayModel.create(id_xray, id_scanner, id_pasien, img, confidence_score, label, currentDate);
 
     if (result.code !== undefined) {
       throw new Error("Update Profile Failed");
@@ -139,7 +142,40 @@ const saveHistoryDokter = async (req, res) => {
         message: "Berhasil menyimpan ke histori"
       });
     }
-    
+
+  } catch(err) {
+    return res.status(500).json({
+      status: "fail",
+      message: "Gagal menyimpan ke history"
+    });
+  }
+};
+
+const saveHistoryNewPasien = async (req, res) => {
+  try{
+    const { id_xray, img, confidence_score, label, name, gender, birth, address } = req.body;
+    const id_pasien = pasienModel.generateId();
+
+    const resultPasien = await pasienModel.create(id_pasien, null ,name, gender, birth, address);
+    if(resultPasien.code !== undefined) {
+      throw new Error("Gagal menambahkan data pasien");
+    }
+
+    const id_scanner = await dokterModel.where('id_user', '=', req.id_user).value('id_dokter');
+    const timestamp = new Date();
+    const currentDate = dateFormat(timestamp, "yyyy-mm-dd");
+
+    const result = await historyXrayModel.create(id_xray, id_scanner, id_pasien, img, confidence_score, label, currentDate);
+
+    if (result.code !== undefined) {
+      throw new Error("Update Profile Failed");
+    } else {
+      return res.status(201).json({
+        status: "success",
+        message: "Berhasil menyimpan ke histori"
+      });
+    }
+
   } catch(err) {
     return res.status(500).json({
       status: "fail",
@@ -193,5 +229,7 @@ export {
   updateProfileDokter,
   updateUserDokter,
   getAllHistory,
+  saveHistoryDokter,
+  saveHistoryNewPasien,
   dashboardDokter,
 };
