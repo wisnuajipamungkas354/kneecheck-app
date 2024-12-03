@@ -80,8 +80,11 @@ router.get(
   getDetailHistoryPasien
 );
 router.get("/dashboard", CekToken, cekTypeDokter, dashboardDokter);
+
+// predict
 router.post(
   "/predict",
+  CekToken,
   cekImg.single("img"),
   uploadImg,
   xrayPredictionController
