@@ -6,7 +6,7 @@ import dateFormat from "dateformat";
 
 const homePasien = async (req, res) => {
   const caseTotal = await historyXrayModel.count();
-  let caseGenderPasien = await historyXrayModel.customQuery(
+  let caseGender = await historyXrayModel.customQuery(
     "SELECT pasien.gender AS average, COUNT(*) AS total_kasus FROM pasien JOIN history_xray ON pasien.id_pasien = history_xray.id_scanner GROUP BY average ORDER BY total_kasus DESC LIMIT 1;"
   );
   let caseAge = await historyXrayModel.customQuery(
