@@ -2,11 +2,11 @@ import { Storage } from "@google-cloud/storage";
 import path from "path";
 import historyXrayModel from "../models/historyXrayModel.js";
 
-const pathKey = path.resolve("./serviceaccountkey.json");
+// const pathKey = path.resolve("./serviceaccountkey.json");
 
 const gcs = new Storage({
   projectId: "knee-check-app",
-  keyFile: pathKey,
+  // keyFile: pathKey,
 });
 
 const bucketName = "kneecheck-app-storage";
