@@ -252,10 +252,12 @@ const dashboardDokter = async (req, res) => {
     const gender = await dokterModel.customQuery(
       "SELECT pasien.gender AS average, COUNT(*) AS total FROM pasien JOIN history_xray ON pasien.id_pasien = history_xray.id_pasien GROUP BY average ORDER BY total DESC LIMIT 1;"
     );
-    console.log(age);
     age[0].average = `${age[0].average} Tahun`;
     gender[0].average = gender[0].average === "L" ? "Laki-laki" : "Perempuan";
-    const keseluruhan = await historyXrayModel.count();
+    // const keseluruhan = await historyXrayModel.count("id_xray");
+    const keseluruhan = await historyXrayModel.customQuery(
+      "SELECT COUNT(*) as total FROM history_xray"
+    );
     const level = {
       normal: await historyXrayModel
         .where("confidence_score", "=", 0)
