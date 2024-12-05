@@ -117,10 +117,36 @@ const updateUserDokter = async (req, res) => {
 
 const getAllHistory = async (req, res) => {
   try {
-    const historyPasien = await historyXrayModel.select().get();
-    res.send({ historyPasien });
+    const id_dokter = await dokterModel
+      .where("id_user", "=", req.id_user)
+      .value("id_dokter");
+    let result = await historyXrayModel.customQuery(
+      `SELECT pasien.id_pasien, pasien.name, pasien.gender, pasien.birth, pasien.address, history_xray.id_xray, history_xray.img, history_xray.confidence_score, history_xray.label, history_xray.tgl_scan FROM history_xray JOIN pasien ON pasien.id_pasien = history_xray.id_pasien WHERE history_xray.id_scanner = "${id_dokter}"`
+    );
+    console.log(result);
+
+    if (result.code !== undefined) {
+      throw new Error("Failed to get History");
+    } else {
+      const fixResult = result.map((r) => {
+        const { gender, birth, tgl_scan } = r;
+        gender === "L" ? (r.gender = "Laki-laki") : (r.gender = "Perempuan");
+        r.birth = dateFormat(birth, "dddd, dd mmmm yyyy");
+        r.tgl_scan = dateFormat(tgl_scan, "dddd, dd mmmm yyyy");
+        return r;
+      });
+
+      res.status(200).json({
+        status: "success",
+        message: "Berhasil mengambil data",
+        data: fixResult,
+      });
+    }
   } catch (err) {
-    res.status(500).send({ status: "fail", message: err.message });
+    res.status(500).send({
+      status: "fail",
+      message: err.message,
+    });
   }
 };
 
