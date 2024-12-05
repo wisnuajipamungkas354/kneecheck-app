@@ -69,11 +69,12 @@ class Model {
     return result[0];
   }
 
-  count(col = "*", alias = 'total') {
-    this.#query = `SELECT COUNT (${col}) AS ${alias} FROM ${this.tableName} ${
+  async count(col = "*", alias = "total") {
+    this.#query = `SELECT COUNT(${col}) AS ${alias} FROM ${this.tableName} ${
       this.#where
     } ${this.#orderBy}`;
-    return this.#connect(this.#query);
+    const result = await this.#connect(this.#query);
+    return result[0];
   }
   /**
    * Where Data is Exists
@@ -100,7 +101,9 @@ class Model {
   async value(col) {
     try {
       if (typeof col === "string") {
-        this.#query = `SELECT ${col} AS result FROM ${this.tableName} ${this.#where} LIMIT 1`;
+        this.#query = `SELECT ${col} AS result FROM ${this.tableName} ${
+          this.#where
+        } LIMIT 1`;
         const result = await this.#connect(this.#query);
         return result[0].result;
       } else {

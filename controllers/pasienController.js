@@ -5,15 +5,19 @@ import historyXrayModel from "../models/historyXrayModel.js";
 import dateFormat from "dateformat";
 
 const homePasien = async (req, res) => {
-  const caseTotal = await historyXrayModel.count();
+  const caseTotal = await historyXrayModel.customQuery(
+    "SELECT COUNT(*) as total FROM history_xray"
+  );
   let caseGender = await historyXrayModel.customQuery(
     "SELECT pasien.gender AS average, COUNT(*) AS total_kasus FROM pasien JOIN history_xray ON pasien.id_pasien = history_xray.id_scanner GROUP BY average ORDER BY total_kasus DESC LIMIT 1;"
   );
   let caseAge = await historyXrayModel.customQuery(
     "SELECT TIMESTAMPDIFF(YEAR, pasien.birth, CURDATE()) AS average, COUNT(*) AS total_kasus FROM pasien JOIN history_xray ON pasien.id_pasien = history_xray.id_scanner GROUP BY average ORDER BY total_kasus DESC LIMIT 1;"
   );
-  caseGender.map((d) => d.average == 'L' ? d.average = 'Laki-laki' : d.average = 'Perempuan');
-  caseAge.map((d) => d.average = `${d.average} Tahun`);
+  caseGender.map((d) =>
+    d.average == "L" ? (d.average = "Laki-laki") : (d.average = "Perempuan")
+  );
+  caseAge.map((d) => (d.average = `${d.average} Tahun`));
 
   res.status(200).json({
     status: "success",
@@ -22,9 +26,9 @@ const homePasien = async (req, res) => {
       totalScanned: caseTotal[0]?.total || 0,
       gender: caseGender[0] || 0,
       age: caseAge[0] || 0,
-    }
+    },
   });
-}
+};
 
 const getProfilePasien = async (req, res) => {
   let profilePasien = await pasienModel
@@ -132,9 +136,11 @@ const updateUserPasien = async (req, res) => {
   }
 };
 
-const getHistoryPasien = async(req, res) => {
+const getHistoryPasien = async (req, res) => {
   try {
-    const id_pasien = await pasienModel.where("id_user", "=", req.id_user).value('id_pasien');
+    const id_pasien = await pasienModel
+      .where("id_user", "=", req.id_user)
+      .value("id_pasien");
     let result = await historyXrayModel.customQuery(
       `SELECT pasien.id_pasien, pasien.name, pasien.gender, pasien.birth, pasien.address, history_xray.id_xray, history_xray.img, history_xray.confidence_score, history_xray.label, history_xray.tgl_scan FROM history_xray JOIN pasien ON pasien.id_pasien = history_xray.id_scanner WHERE pasien.id_pasien = "${id_pasien}"`
     );
@@ -144,9 +150,9 @@ const getHistoryPasien = async(req, res) => {
     } else {
       const fixResult = result.map((r) => {
         const { gender, birth, tgl_scan } = r;
-        gender === 'L' ? r.gender = 'Laki-laki' : r.gender = 'Perempuan';
-        r.birth = dateFormat(birth, 'dddd, dd mmmm yyyy');
-        r.tgl_scan = dateFormat(tgl_scan, 'dddd, dd mmmm yyyy');
+        gender === "L" ? (r.gender = "Laki-laki") : (r.gender = "Perempuan");
+        r.birth = dateFormat(birth, "dddd, dd mmmm yyyy");
+        r.tgl_scan = dateFormat(tgl_scan, "dddd, dd mmmm yyyy");
         return r;
       });
 
@@ -165,28 +171,37 @@ const getHistoryPasien = async(req, res) => {
 };
 
 const saveHistoryPasien = async (req, res) => {
-  try{
+  try {
     const { id_xray, img, confidence_score, label } = req.body;
-    const id_scanner = await pasienModel.where('id_user', '=', req.id_user).value('id_pasien');
+    const id_scanner = await pasienModel
+      .where("id_user", "=", req.id_user)
+      .value("id_pasien");
     const id_pasien = id_scanner;
     const timestamp = new Date();
     const currentDate = dateFormat(timestamp, "yyyy-mm-dd");
 
-    const result = await historyXrayModel.create(id_xray, id_scanner, id_pasien, img, confidence_score, label, currentDate);
+    const result = await historyXrayModel.create(
+      id_xray,
+      id_scanner,
+      id_pasien,
+      img,
+      confidence_score,
+      label,
+      currentDate
+    );
 
     if (result.code !== undefined) {
       throw new Error("Update Profile Failed");
     } else {
       return res.status(201).json({
         status: "success",
-        message: "Berhasil menyimpan ke histori"
+        message: "Berhasil menyimpan ke histori",
       });
     }
-
-  } catch(err) {
+  } catch (err) {
     return res.status(500).json({
       status: "fail",
-      message: "Gagal menyimpan ke history"
+      message: "Gagal menyimpan ke history",
     });
   }
 };
