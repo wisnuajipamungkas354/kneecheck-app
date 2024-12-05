@@ -3,6 +3,7 @@ import pasienModel from "../models/pasienModel.js";
 import userModel from "../models/userModel.js";
 import historyXrayModel from "../models/historyXrayModel.js";
 import dateFormat from "dateformat";
+import tipsPengobatanModel from "../models/tipsPengobatanModel.js";
 
 const homePasien = async (req, res) => {
   const caseTotal = await historyXrayModel.customQuery(
@@ -144,15 +145,17 @@ const getHistoryPasien = async (req, res) => {
     let result = await historyXrayModel.customQuery(
       `SELECT pasien.id_pasien, pasien.name, pasien.gender, pasien.birth, pasien.address, history_xray.id_xray, history_xray.img, history_xray.confidence_score, history_xray.label, history_xray.tgl_scan FROM history_xray JOIN pasien ON pasien.id_pasien = history_xray.id_scanner WHERE pasien.id_pasien = "${id_pasien}"`
     );
+    const tips = await tipsPengobatanModel.get();
 
     if (result.code !== undefined) {
       throw new Error("Failed to get History");
     } else {
-      const fixResult = result.map((r) => {
+      const fixResult = result.map((r, i) => {
         const { gender, birth, tgl_scan } = r;
         gender === "L" ? (r.gender = "Laki-laki") : (r.gender = "Perempuan");
         r.birth = dateFormat(birth, "dddd, dd mmmm yyyy");
         r.tgl_scan = dateFormat(tgl_scan, "dddd, dd mmmm yyyy");
+        r.pengobatan = tips.filter((tip) => tip.id === r.confidence_score).map((tip) => tip.tips)[0];
         return r;
       });
 
