@@ -17,13 +17,13 @@ const getProfileDokter = async (req, res) => {
     return;
   }
 
-  profileDokter[0].email = req.email;
-  profileDokter[0].userType = req.userType;
+  profileDokter.email = req.email;
+  profileDokter.userType = req.userType;
 
   res.status(200).json({
     status: "success",
     message: "Berhasil mengambil data",
-    data: profileDokter[0],
+    data: profileDokter,
   });
 };
 

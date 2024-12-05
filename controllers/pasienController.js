@@ -164,28 +164,6 @@ const getHistoryPasien = async(req, res) => {
   }
 };
 
-const getDetailHistoryPasien = async (req, res) => {
-  const idHistory = req.params.id;
-
-  try {
-    const result = await historyXrayModel.where("id", "=", idHistory).first();
-    if (result.code !== undefined) {
-      throw new Error("History not found!");
-    } else {
-      res.status(200).json({
-        status: "success",
-        message: "Berhasil mengambil data",
-        data: result,
-      });
-    }
-  } catch (err) {
-    res.status(404).send({
-      status: "fail",
-      message: err.message,
-    });
-  }
-};
-
 const saveHistoryPasien = async (req, res) => {
   try{
     const { id_xray, img, confidence_score, label } = req.body;
@@ -219,6 +197,5 @@ export {
   updateProfilePasien,
   updateUserPasien,
   getHistoryPasien,
-  getDetailHistoryPasien,
   saveHistoryPasien,
 };

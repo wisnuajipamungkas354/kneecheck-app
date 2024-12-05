@@ -59,13 +59,14 @@ class Model {
     return this.#connect(this.#query);
   }
 
-  first() {
+  async first() {
     if (this.#select === undefined) {
       this.#select = `SELECT * FROM ${this.tableName}`;
     }
 
     this.#query = `${this.#select} ${this.#where} LIMIT 1`;
-    return this.#connect(this.#query);
+    const result = await this.#connect(this.#query);
+    return result[0];
   }
 
   count(col = "*", alias = 'total') {
