@@ -134,10 +134,11 @@ const getAllHistory = async (req, res) => {
         gender === "L" ? (r.gender = "Laki-laki") : (r.gender = "Perempuan");
         r.birth = dateFormat(birth, "dddd, dd mmmm yyyy");
         r.tgl_scan = dateFormat(tgl_scan, "dddd, dd mmmm yyyy");
-        r.pengobatan = tips.filter((tip) => tip.id === r.confidence_score).map((tip) => tip.tips)[0];
+        r.pengobatan = tips
+          .filter((tip) => tip.id === r.confidence_score)
+          .map((tip) => tip.tips)[0];
         return r;
       });
-
       res.status(200).json({
         status: "success",
         message: "Berhasil mengambil data",
