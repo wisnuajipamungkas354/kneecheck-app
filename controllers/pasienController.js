@@ -4,6 +4,7 @@ import userModel from "../models/userModel.js";
 import historyXrayModel from "../models/historyXrayModel.js";
 import dateFormat from "dateformat";
 import tipsPengobatanModel from "../models/tipsPengobatanModel.js";
+import { all } from "axios";
 
 const homePasien = async (req, res) => {
   const caseTotal = await historyXrayModel.customQuery(
@@ -155,7 +156,9 @@ const getHistoryPasien = async (req, res) => {
         gender === "L" ? (r.gender = "Laki-laki") : (r.gender = "Perempuan");
         r.birth = dateFormat(birth, "dddd, dd mmmm yyyy");
         r.tgl_scan = dateFormat(tgl_scan, "dddd, dd mmmm yyyy");
-        r.pengobatan = tips.filter((tip) => tip.id === r.confidence_score).map((tip) => tip.tips)[0];
+        r.pengobatan = tips
+          .filter((tip) => tip.id === r.confidence_score)
+          .map((tip) => tip.tips)[0];
         return r;
       });
 
@@ -209,6 +212,23 @@ const saveHistoryPasien = async (req, res) => {
   }
 };
 
+const getAllPasien = async (req, res) => {
+  try {
+    const allPasien = await pasienModel.select().get();
+
+    return res.status(200).json({
+      status: "success",
+      message: "Berhasil Mengambil Data Pasien",
+      data: allPasien,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
 export {
   homePasien,
   getProfilePasien,
@@ -216,4 +236,5 @@ export {
   updateUserPasien,
   getHistoryPasien,
   saveHistoryPasien,
+  getAllPasien,
 };

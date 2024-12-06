@@ -4,6 +4,7 @@ import {
   registerDokter,
 } from "../controllers/registerController.js";
 import {
+  getAllPasien,
   getHistoryPasien,
   getProfilePasien,
   homePasien,
@@ -45,19 +46,40 @@ router.post("/login", login);
 router.get("/home", CekToken, cekTypePasien, homePasien);
 router.get("/pasien/profile", CekToken, cekTypePasien, getProfilePasien);
 router.put("/pasien/profile/update-profile", CekToken, updateProfilePasien);
-router.put("/pasien/profile/update-user", CekToken, cekTypePasien, updateUserPasien);
+router.put(
+  "/pasien/profile/update-user",
+  CekToken,
+  cekTypePasien,
+  updateUserPasien
+);
 router.get("/pasien/history", CekToken, cekTypePasien, getHistoryPasien);
 router.post("/pasien/history/save", CekToken, cekTypePasien, saveHistoryPasien);
+router.get("/pasien", CekToken, getAllPasien);
 
 // Dokter Routes
 router.get("/dashboard", CekToken, cekTypeDokter, dashboardDokter);
 router.get("/dokter", CekToken, cekTypeDokter, cekTypeDokter, getAllDokter);
 router.get("/dokter/history", CekToken, cekTypeDokter, getAllHistory);
 router.get("/dokter/profile", CekToken, cekTypeDokter, getProfileDokter);
-router.put("/dokter/profile/update-profile", CekToken, cekTypeDokter, updateProfileDokter);
-router.put("/dokter/profile/update-user", CekToken, cekTypeDokter, updateUserDokter);
-router.post("/dokter/history/save", CekToken, cekTypeDokter,saveHistoryDokter);
-router.post("/dokter/history/save-new-pasien", CekToken, cekTypeDokter,saveHistoryNewPasien);
+router.put(
+  "/dokter/profile/update-profile",
+  CekToken,
+  cekTypeDokter,
+  updateProfileDokter
+);
+router.put(
+  "/dokter/profile/update-user",
+  CekToken,
+  cekTypeDokter,
+  updateUserDokter
+);
+router.post("/dokter/history/save", CekToken, cekTypeDokter, saveHistoryDokter);
+router.post(
+  "/dokter/history/save-new-pasien",
+  CekToken,
+  cekTypeDokter,
+  saveHistoryNewPasien
+);
 
 // predict
 router.post(
