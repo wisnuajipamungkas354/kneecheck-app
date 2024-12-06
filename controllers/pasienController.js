@@ -144,9 +144,8 @@ const getHistoryPasien = async (req, res) => {
       .where("id_user", "=", req.id_user)
       .value("id_pasien");
     let result = await historyXrayModel.customQuery(
-      `SELECT pasien.id_pasien, pasien.name, pasien.gender, pasien.birth, pasien.address, history_xray.id_xray, history_xray.img, history_xray.confidence_score, history_xray.label, history_xray.tgl_scan FROM history_xray JOIN pasien ON pasien.id_pasien = history_xray.id_scanner WHERE pasien.id_pasien = "${id_pasien}"`
+      `SELECT pasien.id_pasien, pasien.name, pasien.gender, pasien.birth, pasien.address, history_xray.id_xray, history_xray.img, history_xray.confidence_score, history_xray.label, history_xray.tgl_scan, tips_pengobatan.tips as pengobatan FROM history_xray JOIN pasien ON pasien.id_pasien = history_xray.id_scanner JOIN tips_pengobatan ON tips_pengobatan.id = history_xray.confidence_score WHERE pasien.id_pasien = "${id_pasien}"`
     );
-    const tips = await tipsPengobatanModel.get();
 
     if (result.code !== undefined) {
       throw new Error("Failed to get History");
@@ -156,9 +155,6 @@ const getHistoryPasien = async (req, res) => {
         gender === "L" ? (r.gender = "Laki-laki") : (r.gender = "Perempuan");
         r.birth = dateFormat(birth, "dddd, dd mmmm yyyy");
         r.tgl_scan = dateFormat(tgl_scan, "dddd, dd mmmm yyyy");
-        r.pengobatan = tips
-          .filter((tip) => tip.id === r.confidence_score)
-          .map((tip) => tip.tips)[0];
         return r;
       });
 
@@ -214,7 +210,7 @@ const saveHistoryPasien = async (req, res) => {
 
 const getAllPasien = async (req, res) => {
   try {
-    const allPasien = await pasienModel.select().get();
+    const allPasien = await pasienModel.customQuery("SELECT * FROM pasien");
 
     return res.status(200).json({
       status: "success",
