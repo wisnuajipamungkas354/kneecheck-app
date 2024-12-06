@@ -144,7 +144,7 @@ const getHistoryPasien = async (req, res) => {
       .where("id_user", "=", req.id_user)
       .value("id_pasien");
     let result = await historyXrayModel.customQuery(
-      `SELECT pasien.id_pasien, pasien.name, pasien.gender, pasien.birth, pasien.address, history_xray.id_xray, history_xray.img, history_xray.confidence_score, history_xray.label, history_xray.tgl_scan, tips_pengobatan.tips as pengobatan FROM history_xray JOIN pasien ON pasien.id_pasien = history_xray.id_scanner JOIN tips_pengobatan ON tips_pengobatan.id = history_xray.confidence_score WHERE pasien.id_pasien = "${id_pasien}"`
+      `SELECT pasien.id_pasien, pasien.name, pasien.gender, pasien.birth, pasien.address, history_xray.id_xray, history_xray.img, history_xray.confidence_score, history_xray.label, history_xray.tgl_scan, tips_pengobatan.tips as pengobatan FROM history_xray JOIN pasien ON pasien.id_pasien = history_xray.id_scanner JOIN tips_pengobatan ON tips_pengobatan.id = history_xray.confidence_score WHERE pasien.id_pasien = "${id_pasien}" ORDER BY history_xray.tgl_scan DESC`
     );
 
     if (result.code !== undefined) {

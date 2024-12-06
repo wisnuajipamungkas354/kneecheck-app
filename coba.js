@@ -1,11 +1,17 @@
 import { nanoid } from "nanoid";
-for (let i = 88; i < 100; i++) {
-  console.log(
-    `('P240908${i}', '${nanoid(
-      12
-    )}', 'sukinem${i}', 'L', '1965-08-07', 'Bekasi'),`
-  );
-}
+const data = [
+  { tanggal: "2024-12-01", nilai: 100 },
+  { tanggal: "2024-12-02", nilai: 200 },
+  { tanggal: "2024-12-03", nilai: 300 },
+];
+
+const tanggalInput = new Date("2024-12-02");
+
+const dataTerbaru = data
+  .filter((item) => new Date(item.tanggal) >= tanggalInput)
+  .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+
+console.log(dataTerbaru);
 // INSERT INTO history_xray (id_xray, id_scanner, id_pasien, img, confidence_score, label, tgl_scan)
 // VALUES
 // ('XRAY-20241203', 'P241203', 'P241203', 'xray_1.png', 4, 'Knee Pain', '2024-12-03'),
