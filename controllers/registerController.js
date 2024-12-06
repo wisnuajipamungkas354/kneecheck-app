@@ -10,7 +10,7 @@ const registerPasien = async (req, res) => {
     const id_user = userModel.generateId();
     const id_pasien = pasienModel.generateId();
     const userType = "Pasien";
-    const { email, password, name, gender, birth, address } = req.body;
+    let { email, password, name, gender, birth, address } = req.body;
     if (
       userModel.checkEmptyOrUndefined(
         email,
@@ -82,7 +82,7 @@ const registerDokter = async (req, res) => {
     const id_dokter = dokterModel.generateId();
     const userType = "Dokter";
 
-    const { email, password, name, gender, address, hospital } = req.body;
+    let { email, password, name, gender, address, hospital } = req.body;
 
     if (
       userModel.checkEmptyOrUndefined(

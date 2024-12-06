@@ -5,6 +5,7 @@ import historyXrayModel from "../models/historyXrayModel.js";
 import dateFormat from "dateformat";
 import tipsPengobatanModel from "../models/tipsPengobatanModel.js";
 import { all } from "axios";
+import moment from "moment";
 
 const homePasien = async (req, res) => {
   const caseTotal = await historyXrayModel.customQuery(
@@ -153,8 +154,8 @@ const getHistoryPasien = async (req, res) => {
       const fixResult = result.map((r, i) => {
         const { gender, birth, tgl_scan } = r;
         gender === "L" ? (r.gender = "Laki-laki") : (r.gender = "Perempuan");
-        r.birth = dateFormat(birth, "dddd, dd mmmm yyyy");
-        r.tgl_scan = dateFormat(tgl_scan, "dddd, dd mmmm yyyy");
+        r.birth = moment(birth).locale('id').format('dddd, D MMMM YYYY');
+        r.tgl_scan = moment(tgl_scan).locale('id'.format('dddd, D MMMM YYYY'));
         return r;
       });
 
