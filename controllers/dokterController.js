@@ -151,11 +151,11 @@ const getAllHistory = async (req, res) => {
 
 const saveHistoryDokter = async (req, res) => {
   try {
-    const { id_xray, img, confidence_score, label } = req.body;
+    const { id_xray, img, confidence_score, label, id_pasien } = req.body;
     const id_scanner = await dokterModel
       .where("id_user", "=", req.id_user)
       .value("id_dokter");
-    const id_pasien = id_scanner;
+    // const id_pasien = id_scanner;
     const timestamp = new Date();
     const currentDate = dateFormat(timestamp, "yyyy-mm-dd");
 
