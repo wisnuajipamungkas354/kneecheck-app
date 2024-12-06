@@ -28,6 +28,8 @@ const registerPasien = async (req, res) => {
       return false;
     }
 
+    gender = gender.toUpperCase().substr(1,1);
+
     if (validator.isEmail(email) === true) {
       const checkEmail = await userModel
         .select()
@@ -98,6 +100,8 @@ const registerDokter = async (req, res) => {
       });
       return false;
     }
+
+    gender = gender.toUpperCase().substr(1,1);
 
     if (validator.isEmail(email) === true) {
       const checkEmail = await userModel
