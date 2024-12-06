@@ -60,8 +60,9 @@ const updateProfilePasien = async (req, res) => {
   const { name, gender, birth, address } = req.body;
 
   if (
-    (name && gender && birth && address === undefined) ||
-    (name && gender && birth && address === null)
+    (name || gender || birth || address === undefined) ||
+    (name || gender || birth || address === null) ||
+    (name || gender || birth || address === "")
   ) {
     res.status(400).send({
       status: "fail",
@@ -98,8 +99,9 @@ const updateUserPasien = async (req, res) => {
   const { email, password, verifyPassword } = req.body;
 
   if (
-    (email && password && verifyPassword === undefined) ||
-    (email && password && verifyPassword === null)
+    (email || password || verifyPassword === undefined) ||
+    (email || password || verifyPassword === null || 
+    (email || password || verifyPassword === ""))
   ) {
     res.status(400).send({
       status: "fail",
