@@ -210,7 +210,9 @@ const saveHistoryPasien = async (req, res) => {
 
 const getAllPasien = async (req, res) => {
   try {
-    const allPasien = await pasienModel.customQuery("SELECT * FROM pasien");
+    const allPasien = await pasienModel.customQuery(
+      "SELECT pasien.*, user.email FROM pasien JOIN user ON pasien.id_user = user.id"
+    );
 
     return res.status(200).json({
       status: "success",
