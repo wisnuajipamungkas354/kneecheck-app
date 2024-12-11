@@ -11,7 +11,8 @@ const registerPasien = async (req, res) => {
     const id_pasien = pasienModel.generateId();
     const userType = "Pasien";
     let { email, password, name, gender, birth, address } = req.body;
-    if (userModel.checkEmptyOrUndefined(
+    if (
+      userModel.checkEmptyOrUndefined(
         email,
         password,
         name,
@@ -27,36 +28,55 @@ const registerPasien = async (req, res) => {
       return false;
     }
 
-    gender = gender.toUpperCase().substr(0,1);
+    gender = gender.toUpperCase().substr(0, 1);
 
     if (validator.isEmail(email) === true) {
-      const checkEmail = await userModel.select().where("email", "=", email).exists();
+      const checkEmail = await userModel
+        .select()
+        .where("email", "=", email)
+        .exists();
       if (checkEmail === 1) {
         res.status(400).send({
           status: "fail",
           message: "This email is already taken. Please choose a different one",
         });
         return;
-      } 
+      }
 
       const hashPassword = await bcrypt.hash(password, 8);
 
       // Try to Create User
-      const user = await userModel.create( id_user, email, hashPassword, userType );
-      if(user.code !== undefined) throw new Error("Gagal melakukan registrasi, Gagal menambahkan data user");
+      const user = await userModel.create(
+        id_user,
+        email,
+        hashPassword,
+        userType
+      );
+      if (user.code !== undefined)
+        throw new Error(
+          "Gagal melakukan registrasi, Gagal menambahkan data user"
+        );
 
       // Try to Create Pasen
-      const pasien = await pasienModel.create( id_pasien, id_user, name, gender, birth, address );
-      if(pasien.code !== undefined) {
-        const delUser = await userModel.where('id', '=', id_user).destroy();
-        throw new Error("Gagal melakukan registrasi, Gagal menambahkan data pasien!");
-      };
+      const pasien = await pasienModel.create(
+        id_pasien,
+        id_user,
+        name,
+        gender,
+        birth,
+        address
+      );
+      if (pasien.code !== undefined) {
+        const delUser = await userModel.where("id", "=", id_user).destroy();
+        throw new Error(
+          "Gagal melakukan registrasi, Gagal menambahkan data pasien!"
+        );
+      }
 
       res.send({
         status: "success",
         message: "Account created successfully! You can now log in",
       });
-
     } else {
       res.status(400).send({
         status: "fail",
@@ -96,10 +116,13 @@ const registerDokter = async (req, res) => {
       return false;
     }
 
-    gender = gender.toUpperCase().substr(1,1);
+    gender = gender.toUpperCase().substr(0, 1);
 
     if (validator.isEmail(email) === true) {
-      const checkEmail = await userModel.select().where("email", "=", email).exists();
+      const checkEmail = await userModel
+        .select()
+        .where("email", "=", email)
+        .exists();
 
       if (checkEmail === 1) {
         res.status(400).send({
@@ -107,19 +130,36 @@ const registerDokter = async (req, res) => {
           message: "This email is already taken. Please choose a different one",
         });
         return;
-      } 
+      }
 
       const hashPassword = await bcrypt.hash(password, 8);
       // Try to Create User
-      const user = await userModel.create( id_user, email, hashPassword, userType );
-      if(user.code !== undefined) throw new Error("Gagal melakukan registrasi, Gagal menambahkan data user");
+      const user = await userModel.create(
+        id_user,
+        email,
+        hashPassword,
+        userType
+      );
+      if (user.code !== undefined)
+        throw new Error(
+          "Gagal melakukan registrasi, Gagal menambahkan data user"
+        );
 
       // Try to Create Dokter
-      const dokter = await dokterModel.create( id_dokter, id_user, name, gender, address, hospital );
-       if(dokter.code !== undefined) {
-        const delUser = await userModel.where('id', '=', id_user).destroy();
-        throw new Error("Gagal melakukan registrasi, Gagal menambahkan data dokter!");
-      };
+      const dokter = await dokterModel.create(
+        id_dokter,
+        id_user,
+        name,
+        gender,
+        address,
+        hospital
+      );
+      if (dokter.code !== undefined) {
+        const delUser = await userModel.where("id", "=", id_user).destroy();
+        throw new Error(
+          "Gagal melakukan registrasi, Gagal menambahkan data dokter!"
+        );
+      }
 
       res.status(201).send({
         status: "success",
@@ -139,7 +179,4 @@ const registerDokter = async (req, res) => {
   }
 };
 
-export {
-  registerPasien,
-  registerDokter,
-};
+export { registerPasien, registerDokter };
