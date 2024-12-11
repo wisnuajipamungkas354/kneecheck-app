@@ -157,7 +157,7 @@ const getHistoryPasien = async (req, res) => {
         const { gender, birth, tgl_scan } = r;
         gender === "L" ? (r.gender = "Laki-laki") : (r.gender = "Perempuan");
         r.birth = moment(birth).locale('id').format('dddd, D MMMM YYYY');
-        r.tgl_scan = moment(tgl_scan).locale('id'.format('dddd, D MMMM YYYY'));
+        r.tgl_scan = moment(tgl_scan).locale('id').format('dddd, D MMMM YYYY');
         return r;
       });
 
